@@ -1,6 +1,9 @@
 ﻿namespace ItsGoStats.Common
 {
-    public class Outcome
+    enum Outcome
     {
+        TerroristsWin,
+        CounterTerroristsWin,
+        Draw,
     }
 }

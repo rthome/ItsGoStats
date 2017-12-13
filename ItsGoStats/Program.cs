@@ -2,6 +2,7 @@
 using Dapper.Contrib.Extensions;
 using ItsGoStats.Caching;
 using ItsGoStats.Caching.Entities;
+using ItsGoStats.Common;
 using Nito.AsyncEx;
 using System;
 using System.Data.SQLite;
@@ -13,11 +14,12 @@ namespace ItsGoStats
     {
         static async Task<int> MainAsync(string[] args)
         {
+            SqlMapper.AddTypeHandler(new VectorTypeHandler());
+
             var connection = new SQLiteConnection("Data Source=test.db; Version=3; Foreign Keys=True; Page Size=16384");
             await connection.OpenAsync();
-            await DatabaseSchema.CreateTables(connection);
 
-            await connection.InsertAsync(new Player { Name = "asd", SteamId = "1:0:1:1231231", NameTime = DateTime.Now });
+            await DatabaseSchema.CreateTables(connection);
 
             return 0;
         }

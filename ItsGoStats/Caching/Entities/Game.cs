@@ -15,6 +15,6 @@ namespace ItsGoStats.Caching.Entities
 
         public int MaxRounds { get; set; }
 
-        public Outcome Outcome { get; set; }
+        public Outcome? Outcome { get; set; }
     }
 }

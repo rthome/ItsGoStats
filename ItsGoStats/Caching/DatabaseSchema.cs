@@ -14,9 +14,9 @@ namespace ItsGoStats.Caching
                                     'AssisterTeam' INTEGER NOT NULL,
                                     'VictimId' INTEGER NOT NULL,
                                     'VictimTeam' INTEGER NOT NULL,
-                                    FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
-                                    FOREIGN KEY ('AssisterId') REFERENCES 'Player' ('Id'),
-                                    FOREIGN KEY ('VictimId') REFERENCES 'Player' ('Id'))";
+                                    FOREIGN KEY ('RoundId') REFERENCES 'Rounds' ('Id') ON DELETE CASCADE,
+                                    FOREIGN KEY ('AssisterId') REFERENCES 'Players' ('Id'),
+                                    FOREIGN KEY ('VictimId') REFERENCES 'Players' ('Id'))";
 
         const string Disconnect = @"
             CREATE TABLE 'Disconnects' ('Id' INTEGER NOT NULL PRIMARY KEY, 
@@ -25,8 +25,8 @@ namespace ItsGoStats.Caching
                                         'PlayerId' INTEGER NOT NULL,
                                         'Team' INTEGER NOT NULL,
                                         'Reason' VARCHAR(255) NOT NULL,
-                                        FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE,
-                                        FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
+                                        FOREIGN KEY ('GameId') REFERENCES 'Games' ('Id') ON DELETE CASCADE,
+                                        FOREIGN KEY ('PlayerId') REFERENCES 'Players' ('Id'))";
 
         const string Game = @"
             CREATE TABLE 'Games' ('Id' INTEGER NOT NULL PRIMARY KEY,
@@ -41,16 +41,16 @@ namespace ItsGoStats.Caching
                                   'RoundId' INTEGER NOT NULL,
                                   'KillerId' INTEGER NOT NULL,
                                   'KillerTeam' INTEGER NOT NULL,
-                                  'Killer_position' VARCHAR(128) NOT NULL,
+                                  'KillerPosition' VARCHAR(128) NOT NULL,
                                   'VictimId' INTEGER NOT NULL,
                                   'VictimTeam' INTEGER NOT NULL,
-                                  'Victim_position' VARCHAR(128) NOT NULL,
+                                  'VictimPosition' VARCHAR(128) NOT NULL,
                                   'Headshot' INTEGER NOT NULL,
                                   'Penetrated' INTEGER NOT NULL,
                                   'Weapon' VARCHAR(255) NOT NULL,
-                                  FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
-                                  FOREIGN KEY ('KillerId') REFERENCES 'Player' ('Id'),
-                                  FOREIGN KEY ('VictimId') REFERENCES 'Player' ('Id'))";
+                                  FOREIGN KEY ('RoundId') REFERENCES 'Rounds' ('Id') ON DELETE CASCADE,
+                                  FOREIGN KEY ('KillerId') REFERENCES 'Players' ('Id'),
+                                  FOREIGN KEY ('VictimId') REFERENCES 'Players' ('Id'))";
 
         const string Player = @"
             CREATE TABLE 'Players' ('Id' INTEGER NOT NULL PRIMARY KEY,
@@ -65,8 +65,8 @@ namespace ItsGoStats.Caching
                                       'PlayerId' INTEGER NOT NULL,
                                       'Team' INTEGER NOT NULL,
                                       'Item' VARCHAR(255) NOT NULL,
-                                      FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
-                                      FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
+                                      FOREIGN KEY ('RoundId') REFERENCES 'Rounds' ('Id') ON DELETE CASCADE,
+                                      FOREIGN KEY ('PlayerId') REFERENCES 'Players' ('Id'))";
 
         const string Round = @"
             CREATE TABLE 'Rounds' ('Id' INTEGER NOT NULL PRIMARY KEY,
@@ -76,7 +76,7 @@ namespace ItsGoStats.Caching
                                    'SfuiNotice' TEXT NOT NULL,
                                    'TerroristScore' INTEGER NOT NULL,
                                    'CounterTerroristScore' INTEGER NOT NULL,
-                                   FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE)";
+                                   FOREIGN KEY ('GameId') REFERENCES 'Games' ('Id') ON DELETE CASCADE)";
 
         const string TeamSwitch = @"
             CREATE TABLE 'TeamSwitches' ('Id' INTEGER NOT NULL PRIMARY KEY,
@@ -85,8 +85,8 @@ namespace ItsGoStats.Caching
                                          'PlayerId' INTEGER NOT NULL,
                                          'PreviousTeam' INTEGER NOT NULL,
                                          'CurrentTeam' INTEGER NOT NULL,
-                                         FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE,
-                                         FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
+                                         FOREIGN KEY ('GameId') REFERENCES 'Games' ('Id') ON DELETE CASCADE,
+                                         FOREIGN KEY ('PlayerId') REFERENCES 'Players' ('Id'))";
 
         public static readonly string[] TableDefinitions = new[]
         {

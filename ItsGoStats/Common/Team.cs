@@ -2,5 +2,9 @@
 {
     enum Team
     {
+        Unassigned,
+        Terrorists,
+        CounterTerrorists,
+        Spectators,
     }
 }
