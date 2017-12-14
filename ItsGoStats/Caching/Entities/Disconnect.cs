@@ -1,6 +1,8 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using System;
+
+using Dapper.Contrib.Extensions;
+
 using ItsGoStats.Common;
-using System;
 
 namespace ItsGoStats.Caching.Entities
 {

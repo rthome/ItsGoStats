@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Threading.Tasks;
+
 using Dapper;
 
 namespace ItsGoStats.Caching
@@ -134,14 +135,14 @@ namespace ItsGoStats.Caching
             @"CREATE INDEX 'TeamSwitch_PlayerId' ON 'TeamSwitches' ('PlayerId')",
         };
 
-        public static async Task CreateTables(IDbConnection connection)
+        public static void CreateTables(IDbConnection connection)
         {
             using (var tr = connection.BeginTransaction())
             {
                 foreach (var definition in TableDefinitions)
-                    await connection.ExecuteAsync(definition, transaction: tr);
+                    connection.Execute(definition, transaction: tr);
                 foreach (var definition in IndexDefinitions)
-                    await connection.ExecuteAsync(definition, transaction: tr);
+                    connection.Execute(definition, transaction: tr);
 
                 tr.Commit();
             }

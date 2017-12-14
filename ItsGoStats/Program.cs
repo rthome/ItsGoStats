@@ -1,29 +1,40 @@
-﻿using Dapper;
-using Dapper.Contrib.Extensions;
-using ItsGoStats.Caching;
-using ItsGoStats.Caching.Entities;
-using ItsGoStats.Common;
-using Nito.AsyncEx;
-using System;
+﻿using System;
 using System.Data.SQLite;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reactive.Linq;
+
+using Dapper;
+
+using ItsGoStats.Caching;
+using ItsGoStats.Common;
+using ItsGoStats.Parsing;
 
 namespace ItsGoStats
 {
     class Program
     {
-        static async Task<int> MainAsync(string[] args)
+        static int Main(string[] args)
         {
             SqlMapper.AddTypeHandler(new VectorTypeHandler());
 
+            if (File.Exists("test.db"))
+                File.Delete("test.db");
             var connection = new SQLiteConnection("Data Source=test.db; Version=3; Foreign Keys=True; Page Size=16384");
-            await connection.OpenAsync();
+            connection.Open();
 
-            await DatabaseSchema.CreateTables(connection);
+            DatabaseSchema.CreateTables(connection);
+
+            if (args.Length > 0)
+            {
+                var logDir = args[0];
+                var groups = LogFileGroup.FromDirectory(logDir);
+                var events = groups
+                    .Select(grp => new LogGroupParser(grp))
+                    .SelectMany(parser => parser.Parse())
+                    .ForEachAsync(Console.WriteLine);
+            }
 
             return 0;
         }
-
-        static int Main(string[] args) => AsyncContext.Run(() => MainAsync(args));
     }
 }

@@ -52,15 +52,6 @@
     <Reference Include="Nancy, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.4.4\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nito.AsyncEx, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
-    </Reference>
-    <Reference Include="Nito.AsyncEx.Concurrent, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
-    </Reference>
-    <Reference Include="Nito.AsyncEx.Enlightenment, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -94,6 +85,20 @@
     <Compile Include="Caching\Entities\Player.cs" />
     <Compile Include="Common\Team.cs" />
     <Compile Include="Common\Vector.cs" />
+    <Compile Include="Parsing\Dto\AssistData.cs" />
+    <Compile Include="Parsing\Dto\CVarData.cs" />
+    <Compile Include="Parsing\Dto\DisconnectData.cs" />
+    <Compile Include="Parsing\Dto\GameStartData.cs" />
+    <Compile Include="Parsing\Dto\KillData.cs" />
+    <Compile Include="Parsing\Dto\LogEventBase.cs" />
+    <Compile Include="Parsing\Dto\PlayerData.cs" />
+    <Compile Include="Parsing\Dto\PurchaseData.cs" />
+    <Compile Include="Parsing\Dto\EndOfRoundData.cs" />
+    <Compile Include="Parsing\Dto\ServerVersionData.cs" />
+    <Compile Include="Parsing\Dto\TeamSwitchData.cs" />
+    <Compile Include="Parsing\LogFileGroup.cs" />
+    <Compile Include="Parsing\LogGroupParser.cs" />
+    <Compile Include="Parsing\RegexReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -101,9 +106,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Parsing\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

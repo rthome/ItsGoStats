@@ -1,14 +1,9 @@
 ﻿using System;
 
-using Dapper.Contrib.Extensions;
-
-namespace ItsGoStats.Caching.Entities
+namespace ItsGoStats.Parsing.Dto
 {
-    class Player
+    class PlayerData
     {
-        [Key]
-        public int Id { get; set; }
-
         public string SteamId { get; set; }
 
         public DateTime NameTime { get; set; }
