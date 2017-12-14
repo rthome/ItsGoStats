@@ -6,8 +6,8 @@ namespace ItsGoStats.Parsing.Dto
     {
         public PlayerData Player { get; set; }
 
-        public Team PreviousTeam { get; set; }
+        public Team? PreviousTeam { get; set; }
 
-        public Team CurrentTeam { get; set; }
+        public Team? CurrentTeam { get; set; }
     }
 }
