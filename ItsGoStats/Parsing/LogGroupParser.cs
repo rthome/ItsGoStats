@@ -14,15 +14,15 @@ namespace ItsGoStats.Parsing
         const string PlayerPattern = @"""(.+?)<\d+><(.+?)><(.*?)>""";
         const string PlayerWithoutTeamPattern = @"""(.+?)<\d+><(.+?)>""";
 
-        static readonly Regex LogStartedRegex = new Regex(DatePrefix + @"Log file started \(file "".+?""\) \(game "".+?""\) \(version ""(\d+)""\)", RegexOptions.Compiled);
-        static readonly Regex MatchStartRegex = new Regex(DatePrefix + @"World triggered ""Match_Start"" on ""(.+?)""", RegexOptions.Compiled);
-        static readonly Regex KillRegex = new Regex(DatePrefix + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] killed " + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] with ""([^""]+)""(?: \(([^\)]+)\))?", RegexOptions.Compiled);
-        static readonly Regex AssistRegex = new Regex(DatePrefix + PlayerPattern + @" assisted killing " + PlayerPattern, RegexOptions.Compiled);
-        static readonly Regex CVarRegex = new Regex(DatePrefix + @"server_cvar: ""([^""]+)"" ""([^""]+)""", RegexOptions.Compiled);
+        static readonly Regex LogStartedRegex = new Regex(DatePrefix + @"Log file started \(file "".+?""\) \(game "".+?""\) \(version ""(\d+)""\)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex MatchStartRegex = new Regex(DatePrefix + @"World triggered ""Match_Start"" on ""(.+?)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex KillRegex = new Regex(DatePrefix + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] killed " + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] with ""([^""]+)""(?: \(([^\)]+)\))?", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex AssistRegex = new Regex(DatePrefix + PlayerPattern + @" assisted killing " + PlayerPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex CVarRegex = new Regex(DatePrefix + @"server_cvar: ""([^""]+)"" ""([^""]+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex EndOfRoundRegex = new Regex(DatePrefix + @"Team ""(TERRORIST|CT)"" triggered ""(SFUI_Notice_All_Hostages_Rescued|SFUI_Notice_Bomb_Defused|SFUI_Notice_CTs_Win|SFUI_Notice_Hostages_Not_Rescued|SFUI_Notice_Target_Bombed|SFUI_Notice_Target_Saved|SFUI_Notice_Terrorists_Win)"" \(CT ""(\d+)""\) \(T ""(\d+)""\)", RegexOptions.Compiled);
-        static readonly Regex TeamSwitchRegex = new Regex(DatePrefix + PlayerWithoutTeamPattern + @" switched from team <(.+?)> to <(.+?)>", RegexOptions.Compiled);
-        static readonly Regex DisconnectRegex = new Regex(DatePrefix + PlayerPattern + @" disconnected \(reason ""([^""]+)""\)", RegexOptions.Compiled);
-        static readonly Regex PurchaseRegex = new Regex(DatePrefix + PlayerPattern + @" purchased ""([^""]+)""", RegexOptions.Compiled);
+        static readonly Regex TeamSwitchRegex = new Regex(DatePrefix + PlayerWithoutTeamPattern + @" switched from team <(.+?)> to <(.+?)>", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex DisconnectRegex = new Regex(DatePrefix + PlayerPattern + @" disconnected \(reason ""([^""]+)""\)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex PurchaseRegex = new Regex(DatePrefix + PlayerPattern + @" purchased ""([^""]+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         static readonly List<(string, Regex, Func<RegexReader, LogEventBase>)> Readers = new List<(string, Regex, Func<RegexReader, LogEventBase>)>
         {
@@ -230,29 +230,25 @@ namespace ItsGoStats.Parsing
         public async Task<IList<LogEventBase>> ParseAsync()
         {
             var lines = await FileGroup.ReadConcatenatedLinesAsync();
-
-            return await Task.Run(() =>
+            var events = new List<LogEventBase>();
+            for (int i = 0; i < lines.Length; i++)
             {
-                var events = new List<LogEventBase>();
-                for (int i = 0; i < lines.Length; i++)
+                foreach ((var guard, var regex, var handler) in Readers)
                 {
-                    foreach ((var guard, var regex, var handler) in Readers)
-                    {
-                        var line = lines[i];
-                        if (line.Length < 26 || line.IndexOf(guard, 25) < 0) // Start at position 25 to skip timestamp
-                            continue;
+                    var line = lines[i];
+                    if (line.Length < 26 || line.IndexOf(guard, 25, StringComparison.Ordinal) < 0) // Start at position 25 to skip timestamp
+                        continue;
 
-                        var match = regex.Match(line);
-                        if (match.Success)
-                        {
-                            var reader = new RegexReader(match);
-                            events.Add(handler(reader));
-                            break;
-                        }
+                    var match = regex.Match(line);
+                    if (match.Success)
+                    {
+                        var reader = new RegexReader(match);
+                        events.Add(handler(reader));
+                        break;
                     }
                 }
-                return events;
-            });
+            }
+            return events;
         }
 
         public LogGroupParser(LogGroup fileGroup) => FileGroup = fileGroup ?? throw new ArgumentNullException(nameof(fileGroup));
