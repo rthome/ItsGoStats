@@ -135,14 +135,14 @@ namespace ItsGoStats.Caching
             @"CREATE INDEX 'TeamSwitch_PlayerId' ON 'TeamSwitches' ('PlayerId')",
         };
 
-        public static void CreateTables(IDbConnection connection)
+        public static async Task CreateTablesAsync(IDbConnection connection)
         {
             using (var tr = connection.BeginTransaction())
             {
                 foreach (var definition in TableDefinitions)
-                    connection.Execute(definition, transaction: tr);
+                    await connection.ExecuteAsync(definition, transaction: tr);
                 foreach (var definition in IndexDefinitions)
-                    connection.Execute(definition, transaction: tr);
+                    await connection.ExecuteAsync(definition, transaction: tr);
 
                 tr.Commit();
             }

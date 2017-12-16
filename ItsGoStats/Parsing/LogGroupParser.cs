@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
 using ItsGoStats.Common;
 using ItsGoStats.Parsing.Dto;
 
@@ -9,19 +10,19 @@ namespace ItsGoStats.Parsing
 {
     class LogGroupParser
     {
-        const string DatePrefix = @"^L (\d{2})\/(\d{2})\/(\d+) - (\d{2}):(\d{2}):(\d{2}): ";
+        const string DatePrefix = @"^L (\d{2})\/(\d{2})\/(\d{4}) - (\d{2}):(\d{2}):(\d{2}): ";
         const string PlayerPattern = @"""(.+?)<\d+><(.+?)><(.*?)>""";
         const string PlayerWithoutTeamPattern = @"""(.+?)<\d+><(.+?)>""";
 
-        static readonly Regex LogStartedRegex = new Regex(DatePrefix + @"Log file started \(file "".+?""\) \(game "".+?""\) \(version ""(\d+)""\)");
-        static readonly Regex MatchStartRegex = new Regex(DatePrefix + @"World triggered ""Match_Start"" on ""(.+?)""");
-        static readonly Regex KillRegex = new Regex(DatePrefix + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] killed " + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] with ""(.+?)""(?: \((.+?)\))?");
-        static readonly Regex AssistRegex = new Regex(DatePrefix + PlayerPattern + @" assisted killing " + PlayerPattern);
-        static readonly Regex CVarRegex = new Regex(DatePrefix + @"server_cvar: ""([^""]+)"" ""([^""]+)""");
-        static readonly Regex EndOfRoundRegex = new Regex(DatePrefix + @"Team ""(TERRORIST|CT)"" triggered ""(SFUI_Notice_All_Hostages_Rescued|SFUI_Notice_Bomb_Defused|SFUI_Notice_CTs_Win|SFUI_Notice_Hostages_Not_Rescued|SFUI_Notice_Target_Bombed|SFUI_Notice_Target_Saved|SFUI_Notice_Terrorists_Win)"" \(CT ""(\d+)""\) \(T ""(\d+)""\)");
-        static readonly Regex TeamSwitchRegex = new Regex(DatePrefix + PlayerWithoutTeamPattern + @" switched from team <(.+?)> to <(.+?)>");
-        static readonly Regex DisconnectRegex = new Regex(DatePrefix + PlayerPattern + @" disconnected \(reason ""(.+?)""\)");
-        static readonly Regex PurchaseRegex = new Regex(DatePrefix + PlayerPattern + @" purchased ""(.+?)""");
+        static readonly Regex LogStartedRegex = new Regex(DatePrefix + @"Log file started \(file "".+?""\) \(game "".+?""\) \(version ""(\d+)""\)", RegexOptions.Compiled);
+        static readonly Regex MatchStartRegex = new Regex(DatePrefix + @"World triggered ""Match_Start"" on ""(.+?)""", RegexOptions.Compiled);
+        static readonly Regex KillRegex = new Regex(DatePrefix + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] killed " + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] with ""(.+?)""(?: \((.+?)\))?", RegexOptions.Compiled);
+        static readonly Regex AssistRegex = new Regex(DatePrefix + PlayerPattern + @" assisted killing " + PlayerPattern, RegexOptions.Compiled);
+        static readonly Regex CVarRegex = new Regex(DatePrefix + @"server_cvar: ""([^""]+)"" ""([^""]+)""", RegexOptions.Compiled);
+        static readonly Regex EndOfRoundRegex = new Regex(DatePrefix + @"Team ""(TERRORIST|CT)"" triggered ""(SFUI_Notice_All_Hostages_Rescued|SFUI_Notice_Bomb_Defused|SFUI_Notice_CTs_Win|SFUI_Notice_Hostages_Not_Rescued|SFUI_Notice_Target_Bombed|SFUI_Notice_Target_Saved|SFUI_Notice_Terrorists_Win)"" \(CT ""(\d+)""\) \(T ""(\d+)""\)", RegexOptions.Compiled);
+        static readonly Regex TeamSwitchRegex = new Regex(DatePrefix + PlayerWithoutTeamPattern + @" switched from team <(.+?)> to <(.+?)>", RegexOptions.Compiled);
+        static readonly Regex DisconnectRegex = new Regex(DatePrefix + PlayerPattern + @" disconnected \(reason ""(.+?)""\)", RegexOptions.Compiled);
+        static readonly Regex PurchaseRegex = new Regex(DatePrefix + PlayerPattern + @" purchased ""(.+?)""", RegexOptions.Compiled);
 
         static readonly Dictionary<Regex, Func<RegexReader, LogEventBase>> Readers = new Dictionary<Regex, Func<RegexReader, LogEventBase>>
         {
@@ -47,7 +48,7 @@ namespace ItsGoStats.Parsing
             { "SFUI_Notice_Terrorists_Win", Team.Terrorists },
         };
 
-        public LogFileGroup FileGroup { get; }
+        public LogGroup FileGroup { get; }
 
         static Team MapSfuiNotice(string value)
         {
@@ -120,7 +121,7 @@ namespace ItsGoStats.Parsing
             var sfuiNotice = reader.String();
             var counterTerroristScore = reader.Integer();
             var terroristScore = reader.Integer();
-            
+
             return new EndOfRoundData
             {
                 Time = time,
@@ -226,16 +227,30 @@ namespace ItsGoStats.Parsing
             };
         }
 
-        public IObservable<LogEventBase> Parse()
+        public async Task<IList<LogEventBase>> ParseAsync()
         {
-            return FileGroup.ReadConcatenatedLines()
-                .SelectMany(line => Readers.ToObservable()
-                    .Select(kv => new { Match = kv.Key.Match(line), Selector = kv.Value })
-                    .FirstOrDefaultAsync(r => r.Match.Success)
-                    .Where(r => r != null)
-                    .Select(r => r.Selector(new RegexReader(r.Match))));
+            var lines = await FileGroup.ReadConcatenatedLinesAsync();
+
+            return await Task.Run(() =>
+            {
+                var events = new List<LogEventBase>();
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    foreach (var entry in Readers)
+                    {
+                        var match = entry.Key.Match(lines[i]);
+                        if (match.Success)
+                        {
+                            var reader = new RegexReader(match);
+                            events.Add(entry.Value(reader));
+                            break;
+                        }
+                    }
+                }
+                return events;
+            });
         }
 
-        public LogGroupParser(LogFileGroup fileGroup) => FileGroup = fileGroup ?? throw new ArgumentNullException(nameof(fileGroup));
+        public LogGroupParser(LogGroup fileGroup) => FileGroup = fileGroup ?? throw new ArgumentNullException(nameof(fileGroup));
     }
 }
