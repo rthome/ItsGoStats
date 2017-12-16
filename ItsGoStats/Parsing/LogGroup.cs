@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,27 +20,14 @@ namespace ItsGoStats.Parsing
 
         public async Task<string[]> ReadConcatenatedLinesAsync()
         {
-            var lineArrays = new List<string[]>();
-            foreach (var file in Files)
+            return await Task.Run(() =>
             {
-                using (var reader = File.OpenText(file))
-                {
-                    var fileData = await reader.ReadToEndAsync();
-                    lineArrays.Add(fileData.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries));
-                }
-            }
-
-            int copyOffset = 0;
-            var concatenatedArray = new string[lineArrays.Sum(l => l.Length)];
-            foreach (var lineArray in lineArrays)
-            {
-                Array.Copy(lineArray, 0, concatenatedArray, copyOffset, lineArray.Length);
-                copyOffset += lineArray.Length;
-            }
-            return concatenatedArray;
+                var fileLines = new List<string>(Files.SelectMany(f => File.ReadLines(f)));
+                return fileLines.ToArray();
+            });
         }
 
-        public override string ToString() => $"Group: {string.Join(", ",Files.Select(Path.GetFileName))}";
+        public override string ToString() => $"Group: {string.Join(", ", Files.Select(Path.GetFileName))}";
 
         public LogGroup(IEnumerable<string> files) => Files = files.ToList().AsReadOnly();
     }
