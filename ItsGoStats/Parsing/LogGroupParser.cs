@@ -48,6 +48,12 @@ namespace ItsGoStats.Parsing
             { "SFUI_Notice_Terrorists_Win", Team.Terrorists },
         };
 
+        static readonly Dictionary<string, string> weaponTranslations = new Dictionary<string, string>
+        {
+            { "knife_t", "knife" },
+            { "knife_default_ct", "knife" },
+        };
+
         const string BotId = "BOT";
 
         public LogGroup FileGroup { get; }
@@ -65,6 +71,23 @@ namespace ItsGoStats.Parsing
                 return winner;
             else
                 throw new ArgumentException($"Unknown SfuiNotice text '{value}'", nameof(value));
+        }
+
+        static string TranslateWeapon(string weapon)
+        {
+            if (weaponTranslations.TryGetValue(weapon, out var translatedWeapon))
+                return translatedWeapon;
+            return weapon;
+        }
+
+        static string NormalizeMapName(string map)
+        {
+            if (map.Contains("/"))
+            {
+                var parts = map.Split('/');
+                return parts[parts.Length - 1];
+            }
+            return map;
         }
 
         static AssistData ReadAssist(RegexReader reader)
@@ -149,7 +172,7 @@ namespace ItsGoStats.Parsing
             return new GameStartData
             {
                 Time = time,
-                Map = map,
+                Map = NormalizeMapName(map),
             };
         }
 
@@ -181,7 +204,7 @@ namespace ItsGoStats.Parsing
                 Victim = victim,
                 VictimTeam = victimTeam,
                 VictimPosition = victimPosition,
-                Weapon = weapon,
+                Weapon = TranslateWeapon(weapon),
                 Headshot = headshot,
                 Penetrated = penetrated,
             };

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
-using ItsGoStats.Caching.Entities;
-using ItsGoStats.Parsing;
-using ItsGoStats.Parsing.Dto;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+
 using Dapper;
 using Dapper.Contrib.Extensions;
+
+using ItsGoStats.Caching.Entities;
 using ItsGoStats.Common;
-using System.Reflection;
+using ItsGoStats.Parsing;
+using ItsGoStats.Parsing.Dto;
 
 namespace ItsGoStats.Caching
 {
@@ -56,11 +58,7 @@ namespace ItsGoStats.Caching
 
         #endregion
 
-        static readonly Dictionary<string, string> weaponTranslations = new Dictionary<string, string>
-        {
-            { "knife_t", "knife" },
-            { "knife_default_ct", "knife" },
-        };
+        static readonly Dictionary<Type, MethodInfo> handlerCache = new Dictionary<Type, MethodInfo>();
 
         readonly Dictionary<string, Player> playerCache = new Dictionary<string, Player>();
         readonly LogGroupParser parser;
@@ -72,13 +70,6 @@ namespace ItsGoStats.Caching
         public bool IsParsed { get; private set; }
 
         public bool HadError { get; private set; }
-
-        string TranslateWeapon(string weapon)
-        {
-            if (weaponTranslations.TryGetValue(weapon, out var translatedWeapon))
-                return translatedWeapon;
-            return weapon;
-        }
 
         // TODO: Make async?
         int GetPlayerId(IDbConnection connection, PlayerData data)
@@ -136,7 +127,7 @@ namespace ItsGoStats.Caching
                 if (outcome.HasValue)
                 {
                     gameState.Game.Outcome = outcome;
-                    await connection.UpdateAsync(gameState.Game);
+                    var result = await connection.UpdateAsync(gameState.Game);
                 }
             }
 
@@ -193,7 +184,7 @@ namespace ItsGoStats.Caching
                     VictimPosition = data.VictimPosition,
                     Headshot = data.Headshot,
                     Penetrated = data.Penetrated,
-                    Weapon = TranslateWeapon(data.Weapon),
+                    Weapon = data.Weapon,
                 }).ToList();
                 var assists = roundState.Assists.Select(data => new Assist
                 {
@@ -329,9 +320,10 @@ namespace ItsGoStats.Caching
             var events = await parser.ParseAsync();
             foreach (var data in events)
             {
-                // TODO: Make this less stupid - ideally find a better way to do late binding
-                var method = typeof(LogGroupInserter).GetMethod("HandleAsync", BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(IDbConnection), data.GetType() }, null);
+                if (!handlerCache.TryGetValue(data.GetType(), out var method))
+                    method = typeof(LogGroupInserter).GetMethod("HandleAsync", BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(IDbConnection), data.GetType() }, null);
                 await (Task)method.Invoke(this, new object[] { connection, data });
+
                 if (HadError)
                     break;
             }
