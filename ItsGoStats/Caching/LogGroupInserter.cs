@@ -123,7 +123,7 @@ namespace ItsGoStats.Caching
             var roundCount = await connection.ExecuteScalarAsync<int>(@"select count(*) from Round where Round.GameId = @Id", new { gameState.Game.Id });
             if (roundCount > 0)
             {
-                var lastRound = await connection.QueryFirstAsync<Round>(@"select count(*) from Round where Round.GameId = @Id order by Round.Time desc", new { gameState.Game.Id });
+                var lastRound = await connection.QueryFirstAsync<Round>(@"select * from Round where Round.GameId = @Id order by Round.Time desc", new { gameState.Game.Id });
 
                 Outcome? outcome = null;
                 if (lastRound.TerroristScore > gameState.Game.MaxRounds / 2)

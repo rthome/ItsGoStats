@@ -10,85 +10,85 @@ namespace ItsGoStats.Caching
     {
         const string Assist = @"
             CREATE TABLE 'Assist' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                    'Time' DATETime NOT NULL,
-                                    'RoundId' INTEGER NOT NULL,
-                                    'AssisterId' INTEGER NOT NULL,
-                                    'AssisterTeam' INTEGER NOT NULL,
-                                    'VictimId' INTEGER NOT NULL,
-                                    'VictimTeam' INTEGER NOT NULL,
-                                    FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
-                                    FOREIGN KEY ('AssisterId') REFERENCES 'Player' ('Id'),
-                                    FOREIGN KEY ('VictimId') REFERENCES 'Player' ('Id'))";
+                                   'Time' DATETime NOT NULL,
+                                   'RoundId' INTEGER NOT NULL,
+                                   'AssisterId' INTEGER NOT NULL,
+                                   'AssisterTeam' INTEGER NOT NULL,
+                                   'VictimId' INTEGER NOT NULL,
+                                   'VictimTeam' INTEGER NOT NULL,
+                                   FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
+                                   FOREIGN KEY ('AssisterId') REFERENCES 'Player' ('Id'),
+                                   FOREIGN KEY ('VictimId') REFERENCES 'Player' ('Id'))";
 
         const string Disconnect = @"
             CREATE TABLE 'Disconnect' ('Id' INTEGER NOT NULL PRIMARY KEY, 
-                                        'Time' DATETime NOT NULL,
-                                        'GameId' INTEGER NOT NULL,
-                                        'PlayerId' INTEGER NOT NULL,
-                                        'Team' INTEGER,
-                                        'Reason' VARCHAR(255) NOT NULL,
-                                        FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE,
-                                        FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
+                                       'Time' DATETime NOT NULL,
+                                       'GameId' INTEGER NOT NULL,
+                                       'PlayerId' INTEGER NOT NULL,
+                                       'Team' INTEGER,
+                                       'Reason' VARCHAR(255) NOT NULL,
+                                       FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE,
+                                       FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
 
         const string Game = @"
             CREATE TABLE 'Game' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                  'Time' DATETime NOT NULL,
-                                  'Map' VARCHAR(255) NOT NULL,
-                                  'MaxRounds' INTEGER NOT NULL,
-                                  'Outcome' INTEGER)";
+                                 'Time' DATETime NOT NULL,
+                                 'Map' VARCHAR(255) NOT NULL,
+                                 'MaxRounds' INTEGER NOT NULL,
+                                 'Outcome' INTEGER)";
 
         const string Kill = @"
             CREATE TABLE 'Kill' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                  'Time' DATETime NOT NULL,
-                                  'RoundId' INTEGER NOT NULL,
-                                  'KillerId' INTEGER NOT NULL,
-                                  'KillerTeam' INTEGER NOT NULL,
-                                  'KillerPosition' VARCHAR(128) NOT NULL,
-                                  'VictimId' INTEGER NOT NULL,
-                                  'VictimTeam' INTEGER NOT NULL,
-                                  'VictimPosition' VARCHAR(128) NOT NULL,
-                                  'Headshot' INTEGER NOT NULL,
-                                  'Penetrated' INTEGER NOT NULL,
-                                  'Weapon' VARCHAR(255) NOT NULL,
-                                  FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
-                                  FOREIGN KEY ('KillerId') REFERENCES 'Player' ('Id'),
-                                  FOREIGN KEY ('VictimId') REFERENCES 'Player' ('Id'))";
+                                 'Time' DATETime NOT NULL,
+                                 'RoundId' INTEGER NOT NULL,
+                                 'KillerId' INTEGER NOT NULL,
+                                 'KillerTeam' INTEGER NOT NULL,
+                                 'KillerPosition' VARCHAR(128) NOT NULL,
+                                 'VictimId' INTEGER NOT NULL,
+                                 'VictimTeam' INTEGER NOT NULL,
+                                 'VictimPosition' VARCHAR(128) NOT NULL,
+                                 'Headshot' INTEGER NOT NULL,
+                                 'Penetrated' INTEGER NOT NULL,
+                                 'Weapon' VARCHAR(255) NOT NULL,
+                                 FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
+                                 FOREIGN KEY ('KillerId') REFERENCES 'Player' ('Id'),
+                                 FOREIGN KEY ('VictimId') REFERENCES 'Player' ('Id'))";
 
         const string Player = @"
             CREATE TABLE 'Player' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                    'SteamId' VARCHAR(32) NOT NULL,
-                                    'NameTime' DATETime NOT NULL,
-                                    'Name' VARCHAR(255) NOT NULL)";
+                                   'SteamId' VARCHAR(32) NOT NULL,
+                                   'NameTime' DATETime NOT NULL,
+                                   'Name' VARCHAR(255) NOT NULL)";
 
         const string Purchase = @"
             CREATE TABLE 'Purchase' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                      'Time' DATETime NOT NULL,
-                                      'RoundId' INTEGER NOT NULL,
-                                      'PlayerId' INTEGER NOT NULL,
-                                      'Team' INTEGER NOT NULL,
-                                      'Item' VARCHAR(255) NOT NULL,
-                                      FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
-                                      FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
+                                     'Time' DATETime NOT NULL,
+                                     'RoundId' INTEGER NOT NULL,
+                                     'PlayerId' INTEGER NOT NULL,
+                                     'Team' INTEGER NOT NULL,
+                                     'Item' VARCHAR(255) NOT NULL,
+                                     FOREIGN KEY ('RoundId') REFERENCES 'Round' ('Id') ON DELETE CASCADE,
+                                     FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
 
         const string Round = @"
             CREATE TABLE 'Round' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                   'Time' DATETime NOT NULL,
-                                   'GameId' INTEGER NOT NULL,
-                                   'Winner' INTEGER NOT NULL,
-                                   'SfuiNotice' TEXT NOT NULL,
-                                   'TerroristScore' INTEGER NOT NULL,
-                                   'CounterTerroristScore' INTEGER NOT NULL,
-                                   FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE)";
+                                  'Time' DATETime NOT NULL,
+                                  'GameId' INTEGER NOT NULL,
+                                  'Winner' INTEGER NOT NULL,
+                                  'SfuiNotice' TEXT NOT NULL,
+                                  'TerroristScore' INTEGER NOT NULL,
+                                  'CounterTerroristScore' INTEGER NOT NULL,
+                                  FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE)";
 
         const string TeamSwitch = @"
             CREATE TABLE 'TeamSwitch' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                         'Time' DATETime NOT NULL,
-                                         'GameId' INTEGER NOT NULL,
-                                         'PlayerId' INTEGER NOT NULL,
-                                         'PreviousTeam' INTEGER NOT NULL,
-                                         'CurrentTeam' INTEGER NOT NULL,
-                                         FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE,
-                                         FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
+                                       'Time' DATETime NOT NULL,
+                                       'GameId' INTEGER NOT NULL,
+                                       'PlayerId' INTEGER NOT NULL,
+                                       'PreviousTeam' INTEGER NOT NULL,
+                                       'CurrentTeam' INTEGER NOT NULL,
+                                       FOREIGN KEY ('GameId') REFERENCES 'Game' ('Id') ON DELETE CASCADE,
+                                       FOREIGN KEY ('PlayerId') REFERENCES 'Player' ('Id'))";
 
         public static readonly string[] TableDefinitions = new[]
         {
@@ -151,22 +151,18 @@ namespace ItsGoStats.Caching
 
         public static async Task DumpDatabaseAsync(IDbConnection connection, string filename)
         {
-            var schema = (await connection.QueryAsync<string>(@"select sql from sqlite_master where name not like 'sqlite_%';")).AsList();
             var userTables = (await connection.QueryAsync<string>(@"select name from sqlite_master where type='table' and name not like 'sqlite_%';")).AsList();
 
             using (var dump_connection = new SQLiteConnection(string.Format("Data Source={0}; Version=3; Page Size=16384", filename)))
             {
                 await dump_connection.OpenAsync();
-                using (var tr = dump_connection.BeginTransaction())
-                {
-                    foreach (var definition in schema)
-                        await dump_connection.ExecuteAsync(definition, transaction: tr);
-                    tr.Commit();
-                }
+                await CreateTablesAsync(dump_connection);
             }
 
             var attachCommand = string.Format("attach '{0}' as 'ondisk';", filename);
             await connection.ExecuteAsync(attachCommand);
+            var previousForeignKeyState = await connection.ExecuteScalarAsync<int>("PRAGMA foreign_keys;");
+            await connection.ExecuteAsync("PRAGMA foreign_keys=0");
             using (var tr = connection.BeginTransaction())
             {
                 foreach (var table in userTables)
@@ -177,6 +173,7 @@ namespace ItsGoStats.Caching
 
                 tr.Commit();
             }
+            await connection.ExecuteAsync(string.Format("PRAGMA foreign_keys={0}", previousForeignKeyState));
             await connection.ExecuteAsync("detach 'ondisk'");
         }
     }
