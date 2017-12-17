@@ -22,9 +22,7 @@ namespace ItsGoStats
         {
             SqlMapper.AddTypeHandler(new VectorTypeHandler());
 
-            if (File.Exists("test.db"))
-                File.Delete("test.db");
-            var connection = new SQLiteConnection("Data Source=test.db; Version=3; Foreign Keys=True; Page Size=16384");
+            var connection = new SQLiteConnection("Data Source=:memory:; Version=3; Foreign Keys=True; Page Size=16384");
             await connection.OpenAsync();
 
             await DatabaseSchema.CreateTablesAsync(connection);
@@ -40,15 +38,21 @@ namespace ItsGoStats
 
             var groups = LogGroup.FromDirectory(args[0]);
             var parsers = groups.Select(grp => new LogGroupParser(grp));
-            var parseTasks = parsers.Select(prs => Task.Run(prs.ParseAsync)).ToArray();
-            var logEventLists = await Task.WhenAll(parseTasks);
+            var inserters = parsers.Select(prs => new LogGroupInserter(prs));
+            foreach (var inserter in inserters)
+                await inserter.InsertEventsAsync(dbConnection);
 
             sw.Stop();
 
-            var eventCount = logEventLists.Sum(l => l.Count);
             var time = sw.Elapsed;
-            Console.WriteLine($"Events: {eventCount}");
             Console.WriteLine($"Time: {time}");
+            Console.WriteLine("Dumping...");
+
+            if (File.Exists("test.db"))
+                File.Delete("test.db");
+            await DatabaseSchema.DumpDatabaseAsync(dbConnection, "test.db");
+
+            Console.ReadKey();
 
             return 0;
         }

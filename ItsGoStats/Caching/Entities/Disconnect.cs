@@ -6,6 +6,7 @@ using ItsGoStats.Common;
 
 namespace ItsGoStats.Caching.Entities
 {
+    [Table(nameof(Disconnect))]
     class Disconnect
     {
         [Key]
@@ -17,7 +18,7 @@ namespace ItsGoStats.Caching.Entities
 
         public int PlayerId { get; set; }
 
-        public Team Team { get; set; }
+        public Team? Team { get; set; }
 
         public string Reason { get; set; }
     }

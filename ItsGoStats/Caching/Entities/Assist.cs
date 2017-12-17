@@ -6,6 +6,7 @@ using ItsGoStats.Common;
 
 namespace ItsGoStats.Caching.Entities
 {
+    [Table(nameof(Assist))]
     class Assist
     {
         [Key]

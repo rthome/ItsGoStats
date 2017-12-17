@@ -23,7 +23,7 @@ namespace ItsGoStats.Parsing
         static readonly Regex TeamSwitchRegex = new Regex(DatePrefix + PlayerWithoutTeamPattern + @" switched from team <(.+?)> to <(.+?)>", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex DisconnectRegex = new Regex(DatePrefix + PlayerPattern + @" disconnected \(reason ""([^""]+)""\)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex PurchaseRegex = new Regex(DatePrefix + PlayerPattern + @" purchased ""([^""]+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
+        
         static readonly List<(string, Regex, Func<RegexReader, LogEventBase>)> Readers = new List<(string, Regex, Func<RegexReader, LogEventBase>)>
         {
             ("purchased", PurchaseRegex, ReadPurchase),
@@ -48,7 +48,16 @@ namespace ItsGoStats.Parsing
             { "SFUI_Notice_Terrorists_Win", Team.Terrorists },
         };
 
+        const string BotId = "BOT";
+
         public LogGroup FileGroup { get; }
+
+        static PlayerData GetPlayer(string steamId, DateTime nameTime, string name)
+        {
+            if (steamId == BotId)
+                return new PlayerData { SteamId = BotId, NameTime = nameTime, Name = "Bot" };
+            return new PlayerData { SteamId = steamId, NameTime = nameTime, Name = name };
+        }
 
         static Team MapSfuiNotice(string value)
         {
@@ -68,8 +77,8 @@ namespace ItsGoStats.Parsing
             var victimSteamId = reader.String();
             var victimTeam = reader.Team().Value;
 
-            var assister = new PlayerData { SteamId = assisterSteamId, NameTime = time, Name = assisterName };
-            var victim = new PlayerData { SteamId = victimSteamId, NameTime = time, Name = victimName };
+            var assister = GetPlayer(assisterSteamId, time, assisterName);
+            var victim = GetPlayer(victimSteamId, time, victimName);
 
             return new AssistData
             {
@@ -103,7 +112,7 @@ namespace ItsGoStats.Parsing
             var team = reader.Team();
             var reason = reader.String();
 
-            var player = new PlayerData { SteamId = steamId, NameTime = time, Name = name };
+            var player = GetPlayer(steamId, time, name);
 
             return new DisconnectData
             {
@@ -126,6 +135,7 @@ namespace ItsGoStats.Parsing
             {
                 Time = time,
                 Winner = MapSfuiNotice(sfuiNotice),
+                SfuiNotice = sfuiNotice,
                 CounterTerroristScore = counterTerroristScore,
                 TerroristScore = terroristScore,
             };
@@ -159,8 +169,8 @@ namespace ItsGoStats.Parsing
             var headshot = (flags?.IndexOf("headshot")).GetValueOrDefault(-1) >= 0;
             var penetrated = (flags?.IndexOf("penetrated")).GetValueOrDefault(-1) >= 0;
 
-            var killer = new PlayerData { SteamId = killerSteamId, NameTime = time, Name = killerName };
-            var victim = new PlayerData { SteamId = victimSteamId, NameTime = time, Name = victimName };
+            var killer = GetPlayer(killerSteamId, time, killerName);
+            var victim = GetPlayer(victimSteamId, time, victimName);
 
             return new KillData
             {
@@ -185,7 +195,7 @@ namespace ItsGoStats.Parsing
             var team = reader.Team().Value;
             var item = reader.String();
 
-            var player = new PlayerData { SteamId = steamId, NameTime = time, Name = name };
+            var player = GetPlayer(steamId, time, name);
 
             return new PurchaseData
             {
@@ -216,7 +226,7 @@ namespace ItsGoStats.Parsing
             var previousTeam = reader.Team();
             var currentTeam = reader.Team();
 
-            var player = new PlayerData { SteamId = steamId, NameTime = time, Name = name };
+            var player = GetPlayer(steamId, time, name);
 
             return new TeamSwitchData
             {

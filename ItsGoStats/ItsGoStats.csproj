@@ -93,6 +93,7 @@
     <Compile Include="Caching\Entities\Purchase.cs" />
     <Compile Include="Caching\Entities\Round.cs" />
     <Compile Include="Caching\Entities\TeamSwitch.cs" />
+    <Compile Include="Caching\LogGroupInserter.cs" />
     <Compile Include="Common\Outcome.cs" />
     <Compile Include="Caching\Entities\Player.cs" />
     <Compile Include="Common\Team.cs" />
