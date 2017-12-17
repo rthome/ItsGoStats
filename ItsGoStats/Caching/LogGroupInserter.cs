@@ -127,7 +127,7 @@ namespace ItsGoStats.Caching
                 if (outcome.HasValue)
                 {
                     gameState.Game.Outcome = outcome;
-                    var result = await connection.UpdateAsync(gameState.Game);
+                    await connection.UpdateAsync(gameState.Game);
                 }
             }
 
@@ -155,6 +155,8 @@ namespace ItsGoStats.Caching
 
                 tr.Commit();
             }
+
+            gameState = null;
         }
 
         async Task FinishRoundAsync(IDbConnection connection)
