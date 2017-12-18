@@ -1,8 +1,8 @@
-﻿using ItsGoStats.Common;
+﻿using ItsGoStats.Parsing.Common;
 
 namespace ItsGoStats.Parsing.Dto
 {
-    class AssistData : LogEventBase
+    public class AssistData : LogEventBase
     {
         public PlayerData Assister { get; set; }
 

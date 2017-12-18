@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using ItsGoStats.Common;
+using ItsGoStats.Parsing.Common;
 using ItsGoStats.Parsing.Dto;
 
 namespace ItsGoStats.Parsing
 {
-    class LogGroupParser
+    public class LogGroupParser
     {
         const string DatePrefix = @"^L (\d{2})\/(\d{2})\/(\d{4}) - (\d{2}):(\d{2}):(\d{2}): ";
         const string PlayerPattern = @"""(.+?)<\d+><(.+?)><(.*?)>""";

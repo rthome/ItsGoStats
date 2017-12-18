@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ItsGoStats.Parsing
 {
-    class LogGroup
+    public class LogGroup
     {
         public IReadOnlyCollection<string> Files { get; }
 

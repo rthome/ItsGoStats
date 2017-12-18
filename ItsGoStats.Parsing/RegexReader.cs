@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using ItsGoStats.Common;
+using ItsGoStats.Parsing.Common;
 
 namespace ItsGoStats.Parsing
 {
-    class RegexReader
+    public class RegexReader
     {
         static readonly Dictionary<string, Team> TeamMapping = new Dictionary<string, Common.Team>
         {

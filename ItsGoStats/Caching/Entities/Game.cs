@@ -2,7 +2,7 @@
 
 using Dapper.Contrib.Extensions;
 
-using ItsGoStats.Common;
+using ItsGoStats.Parsing.Common;
 
 namespace ItsGoStats.Caching.Entities
 {

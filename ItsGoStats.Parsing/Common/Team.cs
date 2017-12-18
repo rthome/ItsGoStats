@@ -1,6 +1,6 @@
-﻿namespace ItsGoStats.Common
+﻿namespace ItsGoStats.Parsing.Common
 {
-    enum Team
+    public enum Team
     {
         Unassigned,
         Terrorists,

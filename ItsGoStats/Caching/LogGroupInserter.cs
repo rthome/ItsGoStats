@@ -9,8 +9,8 @@ using Dapper;
 using Dapper.Contrib.Extensions;
 
 using ItsGoStats.Caching.Entities;
-using ItsGoStats.Common;
 using ItsGoStats.Parsing;
+using ItsGoStats.Parsing.Common;
 using ItsGoStats.Parsing.Dto;
 
 namespace ItsGoStats.Caching

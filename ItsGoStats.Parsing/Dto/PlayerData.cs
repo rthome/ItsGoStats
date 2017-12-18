@@ -2,7 +2,7 @@
 
 namespace ItsGoStats.Parsing.Dto
 {
-    class PlayerData
+    public class PlayerData
     {
         public string SteamId { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace ItsGoStats.Parsing.Dto
 {
-    class CVarData : LogEventBase
+    public class CVarData : LogEventBase
     {
         public string Name { get; set; }
 

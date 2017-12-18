@@ -3,19 +3,10 @@ using System.Data;
 
 using Dapper;
 
-namespace ItsGoStats.Common
+using ItsGoStats.Parsing.Common;
+
+namespace ItsGoStats
 {
-    class Vector
-    {
-        public int X { get; set; }
-
-        public int Y { get; set; }
-
-        public int Z { get; set; }
-
-        public double Distance => Math.Sqrt(X * X + Y * Y + Z * Z);
-    }
-
     class VectorTypeHandler : SqlMapper.TypeHandler<Vector>
     {
         public override Vector Parse(object value)

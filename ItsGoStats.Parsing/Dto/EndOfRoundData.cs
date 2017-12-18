@@ -1,8 +1,8 @@
-﻿using ItsGoStats.Common;
+﻿using ItsGoStats.Parsing.Common;
 
 namespace ItsGoStats.Parsing.Dto
 {
-    class EndOfRoundData : LogEventBase
+    public class EndOfRoundData : LogEventBase
     {
         public Team Winner { get; set; }
 

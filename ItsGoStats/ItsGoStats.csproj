@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>ItsGoStats</RootNamespace>
     <AssemblyName>ItsGoStats</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
@@ -94,32 +94,21 @@
     <Compile Include="Caching\Entities\Round.cs" />
     <Compile Include="Caching\Entities\TeamSwitch.cs" />
     <Compile Include="Caching\LogGroupInserter.cs" />
-    <Compile Include="Common\Outcome.cs" />
     <Compile Include="Caching\Entities\Player.cs" />
-    <Compile Include="Common\Team.cs" />
-    <Compile Include="Common\Vector.cs" />
-    <Compile Include="Parsing\Dto\AssistData.cs" />
-    <Compile Include="Parsing\Dto\CVarData.cs" />
-    <Compile Include="Parsing\Dto\DisconnectData.cs" />
-    <Compile Include="Parsing\Dto\GameStartData.cs" />
-    <Compile Include="Parsing\Dto\KillData.cs" />
-    <Compile Include="Parsing\Dto\LogEventBase.cs" />
-    <Compile Include="Parsing\Dto\PlayerData.cs" />
-    <Compile Include="Parsing\Dto\PurchaseData.cs" />
-    <Compile Include="Parsing\Dto\EndOfRoundData.cs" />
-    <Compile Include="Parsing\Dto\ServerVersionData.cs" />
-    <Compile Include="Parsing\Dto\TeamSwitchData.cs" />
-    <Compile Include="Parsing\LogGroup.cs" />
-    <Compile Include="Parsing\LogGroupParser.cs" />
-    <Compile Include="Parsing\RegexReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeHandlers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ItsGoStats.Parsing\ItsGoStats.Parsing.csproj">
+      <Project>{94aeeffa-7a42-4191-a4ab-35f0c1662d61}</Project>
+      <Name>ItsGoStats.Parsing</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

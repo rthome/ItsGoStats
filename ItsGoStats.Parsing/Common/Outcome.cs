@@ -1,6 +1,6 @@
-﻿namespace ItsGoStats.Common
+﻿namespace ItsGoStats.Parsing.Common
 {
-    enum Outcome
+    public enum Outcome
     {
         TerroristsWin,
         CounterTerroristsWin,

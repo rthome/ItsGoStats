@@ -1,8 +1,8 @@
-﻿using ItsGoStats.Common;
+﻿using ItsGoStats.Parsing.Common;
 
 namespace ItsGoStats.Parsing.Dto
 {
-    class KillData : LogEventBase
+    public class KillData : LogEventBase
     {
         public PlayerData Killer { get; set; }
 
