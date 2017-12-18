@@ -15,7 +15,7 @@ using ItsGoStats.Parsing.Dto;
 
 namespace ItsGoStats.Caching
 {
-    class LogGroupInserter
+    public class LogGroupInserter
     {
         #region State Classes
 

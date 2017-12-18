@@ -6,7 +6,7 @@ using Dapper;
 
 namespace ItsGoStats.Caching
 {
-    static class DatabaseSchema
+    public static class DatabaseSchema
     {
         const string Assist = @"
             CREATE TABLE 'Assist' ('Id' INTEGER NOT NULL PRIMARY KEY,
@@ -161,8 +161,7 @@ namespace ItsGoStats.Caching
 
             var attachCommand = string.Format("attach '{0}' as 'ondisk';", filename);
             await connection.ExecuteAsync(attachCommand);
-            var previousForeignKeyState = await connection.ExecuteScalarAsync<int>("PRAGMA foreign_keys;");
-            await connection.ExecuteAsync("PRAGMA foreign_keys=0");
+            await connection.ExecuteAsync("PRAGMA ondisk.foreign_keys=False");
             using (var tr = connection.BeginTransaction())
             {
                 foreach (var table in userTables)
@@ -173,7 +172,6 @@ namespace ItsGoStats.Caching
 
                 tr.Commit();
             }
-            await connection.ExecuteAsync(string.Format("PRAGMA foreign_keys={0}", previousForeignKeyState));
             await connection.ExecuteAsync("detach 'ondisk'");
         }
     }

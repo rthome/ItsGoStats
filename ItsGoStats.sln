@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsGoStats", "ItsGoStats\It
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsGoStats.Parsing", "ItsGoStats.Parsing\ItsGoStats.Parsing.csproj", "{94AEEFFA-7A42-4191-A4AB-35F0C1662D61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsGoStats.Caching", "ItsGoStats.Caching\ItsGoStats.Caching.csproj", "{4E879803-C4BC-4854-8C41-0A5C69920E80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{94AEEFFA-7A42-4191-A4AB-35F0C1662D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94AEEFFA-7A42-4191-A4AB-35F0C1662D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94AEEFFA-7A42-4191-A4AB-35F0C1662D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E879803-C4BC-4854-8C41-0A5C69920E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E879803-C4BC-4854-8C41-0A5C69920E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E879803-C4BC-4854-8C41-0A5C69920E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E879803-C4BC-4854-8C41-0A5C69920E80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
