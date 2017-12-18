@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Dapper;
 
 using ItsGoStats.Caching;
-using ItsGoStats.Parsing;
+
+using Nancy.Hosting.Self;
 
 using Nito.AsyncEx;
 
@@ -33,25 +31,15 @@ namespace ItsGoStats
         {
             var dbConnection = await PrepareDatabaseAsync();
 
-            var sw = Stopwatch.StartNew();
+            var listenUri = new Uri("http://localhost:5555");
+            using (var host = new NancyHost(listenUri))
+            {
+                host.Start();
 
-            var groups = LogGroup.FromDirectory(args[0]);
-            var parsers = groups.Select(grp => new LogGroupParser(grp));
-            var inserters = parsers.Select(prs => new LogGroupInserter(prs));
-            foreach (var inserter in inserters)
-                await inserter.InsertEventsAsync(dbConnection);
-
-            sw.Stop();
-
-            var time = sw.Elapsed;
-            Console.WriteLine($"Time: {time}");
-            Console.WriteLine("Dumping...");
-
-            if (File.Exists("test.db"))
-                File.Delete("test.db");
-            await DatabaseSchema.DumpDatabaseAsync(dbConnection, "test.db");
-
-            Console.ReadKey();
+                Console.WriteLine($"Listening on {listenUri}");
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+            }
 
             return 0;
         }
