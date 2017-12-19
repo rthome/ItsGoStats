@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsGoStats.Parsing", "ItsGo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsGoStats.Caching", "ItsGoStats.Caching\ItsGoStats.Caching.csproj", "{4E879803-C4BC-4854-8C41-0A5C69920E80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Native", "Native", "{2288A22E-37CC-4EE4-BC54-B82BEE2E51C5}"
+	ProjectSection(SolutionItems) = preProject
+		Native\libSQLite.Interop.so = Native\libSQLite.Interop.so
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
