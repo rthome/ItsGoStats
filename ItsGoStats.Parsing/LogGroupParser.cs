@@ -38,7 +38,6 @@ namespace ItsGoStats.Parsing
             ("disconnected", DisconnectRegex, ReadDisconnect),
             ("triggered", EndOfRoundRegex, ReadEndOfRound),
             ("Match_Start", MatchStartRegex, ReadGameStart),
-            ("Log file", LogStartedRegex, ReadServerVersion),
             ("Game Over", GameOverRegex, ReadGameOver),
         };
 
