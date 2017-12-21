@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 
 using ItsGoStats.Caching;
-
+using ItsGoStats.Parsing;
 using Nancy.Hosting.Self;
 
 using Nito.AsyncEx;
@@ -27,9 +27,23 @@ namespace ItsGoStats
             return connection;
         }
 
+        static async Task Startup(IDbConnection connection, string logPath)
+        {
+            var logFileGroups = LogGroup.FromDirectory(logPath).AsList();
+            foreach (var group in logFileGroups)
+            {
+                var parser = new LogGroupParser(group);
+                var inserter = new LogGroupInserter(parser);
+                await inserter.InsertEventsAsync(connection);
+            }
+        }
+
         static async Task<int> AsyncMain(string[] args)
         {
             var dbConnection = await PrepareDatabaseAsync();
+
+            if (args.Length > 0)
+                await Startup(dbConnection, args[0]);
 
             var listenUri = new Uri("http://localhost:5555");
             using (var host = new NancyHost(listenUri))

@@ -10,7 +10,7 @@ namespace ItsGoStats.Caching
     {
         const string Assist = @"
             CREATE TABLE 'Assist' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                   'Time' DATETime NOT NULL,
+                                   'Time' DATETIME NOT NULL,
                                    'RoundId' INTEGER NOT NULL,
                                    'AssisterId' INTEGER NOT NULL,
                                    'AssisterTeam' INTEGER NOT NULL,
@@ -22,7 +22,7 @@ namespace ItsGoStats.Caching
 
         const string Disconnect = @"
             CREATE TABLE 'Disconnect' ('Id' INTEGER NOT NULL PRIMARY KEY, 
-                                       'Time' DATETime NOT NULL,
+                                       'Time' DATETIME NOT NULL,
                                        'GameId' INTEGER NOT NULL,
                                        'PlayerId' INTEGER NOT NULL,
                                        'Team' INTEGER,
@@ -32,14 +32,16 @@ namespace ItsGoStats.Caching
 
         const string Game = @"
             CREATE TABLE 'Game' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                 'Time' DATETime NOT NULL,
+                                 'Time' DATETIME NOT NULL,
                                  'Map' VARCHAR(255) NOT NULL,
-                                 'MaxRounds' INTEGER NOT NULL,
-                                 'Outcome' INTEGER)";
+                                 'ElapsedMinutes' INTEGER NOT NULL,
+                                 'FinalCounterTerroristScore' INTEGER NOT NULL,
+                                 'FinalTerroristScore' INTEGER NOT NULL,
+                                 'Outcome' INTEGER NOT NULL)";
 
         const string Kill = @"
             CREATE TABLE 'Kill' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                 'Time' DATETime NOT NULL,
+                                 'Time' DATETIME NOT NULL,
                                  'RoundId' INTEGER NOT NULL,
                                  'KillerId' INTEGER NOT NULL,
                                  'KillerTeam' INTEGER NOT NULL,
@@ -57,12 +59,12 @@ namespace ItsGoStats.Caching
         const string Player = @"
             CREATE TABLE 'Player' ('Id' INTEGER NOT NULL PRIMARY KEY,
                                    'SteamId' VARCHAR(32) NOT NULL,
-                                   'NameTime' DATETime NOT NULL,
+                                   'NameTime' DATETIME NOT NULL,
                                    'Name' VARCHAR(255) NOT NULL)";
 
         const string Purchase = @"
             CREATE TABLE 'Purchase' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                     'Time' DATETime NOT NULL,
+                                     'Time' DATETIME NOT NULL,
                                      'RoundId' INTEGER NOT NULL,
                                      'PlayerId' INTEGER NOT NULL,
                                      'Team' INTEGER NOT NULL,
@@ -72,7 +74,7 @@ namespace ItsGoStats.Caching
 
         const string Round = @"
             CREATE TABLE 'Round' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                  'Time' DATETime NOT NULL,
+                                  'Time' DATETIME NOT NULL,
                                   'GameId' INTEGER NOT NULL,
                                   'Winner' INTEGER NOT NULL,
                                   'SfuiNotice' TEXT NOT NULL,
@@ -82,7 +84,7 @@ namespace ItsGoStats.Caching
 
         const string TeamSwitch = @"
             CREATE TABLE 'TeamSwitch' ('Id' INTEGER NOT NULL PRIMARY KEY,
-                                       'Time' DATETime NOT NULL,
+                                       'Time' DATETIME NOT NULL,
                                        'GameId' INTEGER NOT NULL,
                                        'PlayerId' INTEGER NOT NULL,
                                        'PreviousTeam' INTEGER NOT NULL,
@@ -114,6 +116,7 @@ namespace ItsGoStats.Caching
             @"CREATE INDEX 'Disconnect_PlayerId' ON 'Disconnect' ('PlayerId')",
 
             @"CREATE INDEX 'Game_Time' ON 'Game' ('Time')",
+            @"CREATE INDEX 'Game_Outcome' ON 'Game' ('Outcome')",
 
             @"CREATE INDEX 'Kill_Time' ON 'Kill' ('Time')",
             @"CREATE INDEX 'Kill_RoundId' ON 'Kill' ('RoundId')",

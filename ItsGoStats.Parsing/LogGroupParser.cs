@@ -10,12 +10,16 @@ namespace ItsGoStats.Parsing
 {
     public class LogGroupParser
     {
+        public const int MinimumRequiredVersion = 6705;
+
         const string DatePrefix = @"^L (\d{2})\/(\d{2})\/(\d{4}) - (\d{2}):(\d{2}):(\d{2}): ";
         const string PlayerPattern = @"""(.+?)<\d+><(.+?)><(.*?)>""";
         const string PlayerWithoutTeamPattern = @"""(.+?)<\d+><(.+?)>""";
 
         static readonly Regex LogStartedRegex = new Regex(DatePrefix + @"Log file started \(file "".+?""\) \(game "".+?""\) \(version ""(\d+)""\)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
         static readonly Regex MatchStartRegex = new Regex(DatePrefix + @"World triggered ""Match_Start"" on ""(.+?)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        static readonly Regex GameOverRegex = new Regex(DatePrefix + @"Game Over: competitive \d+ ([^ ]+) score (\d+):(\d+) after (\d+) min", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex KillRegex = new Regex(DatePrefix + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] killed " + PlayerPattern + @" \[(-?\d+) (-?\d+) (-?\d+)\] with ""([^""]+)""(?: \(([^\)]+)\))?", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex AssistRegex = new Regex(DatePrefix + PlayerPattern + @" assisted killing " + PlayerPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex CVarRegex = new Regex(DatePrefix + @"server_cvar: ""([^""]+)"" ""([^""]+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
@@ -23,7 +27,7 @@ namespace ItsGoStats.Parsing
         static readonly Regex TeamSwitchRegex = new Regex(DatePrefix + PlayerWithoutTeamPattern + @" switched from team <(.+?)> to <(.+?)>", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex DisconnectRegex = new Regex(DatePrefix + PlayerPattern + @" disconnected \(reason ""([^""]+)""\)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         static readonly Regex PurchaseRegex = new Regex(DatePrefix + PlayerPattern + @" purchased ""([^""]+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-        
+
         static readonly List<(string, Regex, Func<RegexReader, LogEventBase>)> Readers = new List<(string, Regex, Func<RegexReader, LogEventBase>)>
         {
             ("purchased", PurchaseRegex, ReadPurchase),
@@ -35,6 +39,7 @@ namespace ItsGoStats.Parsing
             ("triggered", EndOfRoundRegex, ReadEndOfRound),
             ("Match_Start", MatchStartRegex, ReadGameStart),
             ("Log file", LogStartedRegex, ReadServerVersion),
+            ("Game Over", GameOverRegex, ReadGameOver),
         };
 
         static readonly Dictionary<string, Team> WinningTeamMapping = new Dictionary<string, Team>
@@ -176,6 +181,24 @@ namespace ItsGoStats.Parsing
             };
         }
 
+        static GameOverData ReadGameOver(RegexReader reader)
+        {
+            var time = reader.Date();
+            var map = reader.String();
+            var counterTerroristScore = reader.Integer();
+            var terroristScore = reader.Integer();
+            var elapsedMinutes = reader.Integer();
+
+            return new GameOverData
+            {
+                Time = time,
+                Map = NormalizeMapName(map),
+                CounterTerroristScore = counterTerroristScore,
+                TerroristScore = terroristScore,
+                ElapsedMinutes = elapsedMinutes,
+            };
+        }
+
         static KillData ReadKill(RegexReader reader)
         {
             var time = reader.Date();
@@ -229,18 +252,6 @@ namespace ItsGoStats.Parsing
             };
         }
 
-        static ServerVersionData ReadServerVersion(RegexReader reader)
-        {
-            var time = reader.Date();
-            var version = reader.Integer();
-
-            return new ServerVersionData
-            {
-                Time = time,
-                Version = version,
-            };
-        }
-
         static TeamSwitchData ReadTeamSwitch(RegexReader reader)
         {
             var time = reader.Date();
@@ -260,11 +271,31 @@ namespace ItsGoStats.Parsing
             };
         }
 
-        public async Task<IList<LogEventBase>> ParseAsync()
+        static ServerVersionData ReadServerVersion(RegexReader reader)
+        {
+            var time = reader.Date();
+            var version = reader.Integer();
+
+            return new ServerVersionData
+            {
+                Time = time,
+                Version = version,
+            };
+        }
+
+        public async Task<IReadOnlyList<LogEventBase>> ParseAsync()
         {
             var lines = await FileGroup.ReadConcatenatedLinesAsync();
             var events = new List<LogEventBase>();
-            for (int i = 0; i < lines.Length; i++)
+
+            // TODO: Improve first line handling
+            // If log version is older than the oldest version we support, we don't need to read the rest of the log
+            var versionData = ReadServerVersion(new RegexReader(LogStartedRegex.Match(lines[0])));
+            events.Add(versionData);
+            if (versionData.Version < MinimumRequiredVersion)
+                return events;
+
+            for (int i = 1; i < lines.Length; i++)
             {
                 foreach ((var guard, var regex, var handler) in Readers)
                 {

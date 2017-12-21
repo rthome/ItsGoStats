@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using ItsGoStats.Parsing.Common;
@@ -16,10 +17,10 @@ namespace ItsGoStats.Parsing
             {"Spectator", Common.Team.Spectators },
         };
 
-        readonly Match match;
+        readonly string[] matchGroups;
         int index = 1;
 
-        public int Count => match.Groups.Count;
+        public int Count => matchGroups.Length;
 
         static Team? MapTeamString(string value)
         {
@@ -33,7 +34,7 @@ namespace ItsGoStats.Parsing
             }
         }
 
-        public string String() => match.Groups[index++].Value;
+        public string String() => matchGroups[index++];
 
         public int Integer() => int.Parse(String());
 
@@ -58,6 +59,6 @@ namespace ItsGoStats.Parsing
             return new Vector { X = x, Y = y, Z = z };
         }
 
-        public RegexReader(Match match) => this.match = match ?? throw new ArgumentNullException(nameof(match));
+        public RegexReader(Match match) => matchGroups = match.Groups.OfType<Group>().Select(g => g.Value).ToArray();
     }
 }

@@ -42,6 +42,7 @@
     <Compile Include="Dto\CVarData.cs" />
     <Compile Include="Dto\DisconnectData.cs" />
     <Compile Include="Dto\EndOfRoundData.cs" />
+    <Compile Include="Dto\GameOverData.cs" />
     <Compile Include="Dto\GameStartData.cs" />
     <Compile Include="Dto\KillData.cs" />
     <Compile Include="Dto\LogEventBase.cs" />

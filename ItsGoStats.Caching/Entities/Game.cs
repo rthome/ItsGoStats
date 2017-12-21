@@ -16,8 +16,12 @@ namespace ItsGoStats.Caching.Entities
 
         public string Map { get; set; }
 
-        public int MaxRounds { get; set; }
+        public int ElapsedMinutes { get; set; }
 
-        public Outcome? Outcome { get; set; }
+        public int FinalCounterTerroristScore { get; set; }
+
+        public int FinalTerroristScore { get; set; }
+
+        public Outcome Outcome { get; set; }
     }
 }
