@@ -34,6 +34,7 @@ namespace ItsGoStats.Caching
             CREATE TABLE 'Game' ('Id' INTEGER NOT NULL PRIMARY KEY,
                                  'Time' DATETIME NOT NULL,
                                  'Map' VARCHAR(255) NOT NULL,
+                                 'MaxRounds' INTEGER NOT NULL,
                                  'ElapsedMinutes' INTEGER NOT NULL,
                                  'FinalCounterTerroristScore' INTEGER NOT NULL,
                                  'FinalTerroristScore' INTEGER NOT NULL,

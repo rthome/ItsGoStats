@@ -128,6 +128,7 @@ namespace ItsGoStats.Caching
             {
                 Time = gameState.GameOver.Time,
                 Map = gameState.GameOver.Map,
+                MaxRounds = ServerState.MaxRounds,
                 ElapsedMinutes = gameState.GameOver.ElapsedMinutes,
                 FinalCounterTerroristScore = gameState.GameOver.CounterTerroristScore,
                 FinalTerroristScore = gameState.GameOver.TerroristScore,
