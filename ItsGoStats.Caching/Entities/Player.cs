@@ -5,7 +5,7 @@ using Dapper.Contrib.Extensions;
 namespace ItsGoStats.Caching.Entities
 {
     [Table(nameof(Player))]
-    class Player
+    public class Player
     {
         [Key]
         public int Id { get; set; }

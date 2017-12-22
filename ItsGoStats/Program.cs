@@ -36,6 +36,11 @@ namespace ItsGoStats
                 var inserter = new LogGroupInserter(parser);
                 await inserter.InsertEventsAsync(connection);
             }
+
+            var dumpFile = "dump.db";
+            if (File.Exists(dumpFile))
+                File.Delete(dumpFile);
+            await DatabaseSchema.DumpDatabaseAsync(connection, dumpFile);
         }
 
         static async Task<int> AsyncMain(string[] args)
