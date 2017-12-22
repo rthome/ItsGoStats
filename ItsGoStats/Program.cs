@@ -39,8 +39,13 @@ namespace ItsGoStats
             if (args.Length > 0)
                 await Startup(DatabaseProvider.Connection, args[0]);
 
+            var hostConfig = new HostConfiguration
+            {
+                
+            };
+
             var listenUri = new Uri("http://localhost:5555");
-            using (var host = new NancyHost(listenUri))
+            using (var host = new NancyHost(hostConfig, listenUri))
             {
                 host.Start();
 
