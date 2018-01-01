@@ -5,7 +5,7 @@
 }
 
 <ul>
-    @foreach (var player in Model.Players)
+    @foreach (var player in @Model)
     {
         <li>@player.Name (@player.SteamId)</li>
     }

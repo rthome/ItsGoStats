@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@Model.Title - ItsGoStats</title>
+    <title>@ViewBag.Title - ItsGoStats</title>
     <link rel="stylesheet" type="text/css" href="/content/css/bootstrap-reboot.min.css" />
     <link rel="stylesheet" type="text/css" href="/content/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/content/css/bootstrap-grid.min.css" />
@@ -15,7 +15,10 @@
 <body>
     <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">ItsGoStats</a>
+            <a class="navbar-brand" href="/">
+                <img src="/Content/favicon.png" width="32" height="32" alt="" />
+                ItsGoStats
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -38,12 +41,11 @@
 
     <div class="container body-content">
         @RenderBody()
-
-        <hr />
-        <footer>
-            <p>ItsGoStats</p>
-        </footer>
     </div>
+    <hr />
+    <footer>
+        <p>ItsGoStats</p>
+    </footer>
 
     <script src="/content/scripts/jquery-3.2.1.slim.min.js"></script>
     <script src="/content/scripts/bootstrap.bundle.min.js"></script>
