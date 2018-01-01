@@ -2,7 +2,7 @@
 using Dapper;
 using ItsGoStats.Caching.Entities;
 
-namespace ItsGoStats
+namespace ItsGoStats.Routing
 {
     public class PlayerModule : NancyModule
     {
