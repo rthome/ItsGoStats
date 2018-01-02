@@ -97,14 +97,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DateConstraint.cs" />
+    <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Routing\DateFormRoutingConstraint.cs" />
-    <Compile Include="DatabaseProvider.cs" />
+    <Compile Include="Common\DatabaseProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RazorConfiguration.cs" />
+    <Compile Include="Routing\GameModule.cs" />
+    <Compile Include="Routing\GamesModule.cs" />
+    <Compile Include="Routing\HighlightsModule.cs" />
     <Compile Include="Routing\MainModule.cs" />
     <Compile Include="Routing\PlayerModule.cs" />
+    <Compile Include="Routing\PlayersModule.cs" />
     <Compile Include="TypeHandlers.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +162,9 @@
     <Content Include="Content\scripts\jquery-3.2.1.slim.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Views\game.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\games.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

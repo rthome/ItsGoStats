@@ -1,9 +1,9 @@
-﻿using Nancy;
-using Dapper;
-using ItsGoStats.Caching.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
 using ItsGoStats.Common;
 using ItsGoStats.Models;
+
+using Nancy;
 
 namespace ItsGoStats.Routing
 {
@@ -12,7 +12,7 @@ namespace ItsGoStats.Routing
         public PlayerModule()
             : base("/Player")
         {
-            async Task<PlayerModel> CreatePlayerModelAsync(string steamId, DateConstraint constraint)
+            async Task<PlayerModel> CreateModelAsync(string steamId, DateConstraint constraint)
             {
                 var player = await DatabaseProvider.GetPlayerAsync(steamId);
                 if (player == null)
@@ -29,7 +29,7 @@ namespace ItsGoStats.Routing
 
             Get["/{SteamId}/{Date:dateform}", runAsync: true] = async (parameters, token) =>
             {
-                var model = await CreatePlayerModelAsync(parameters.SteamId, parameters.Date);
+                var model = await CreateModelAsync(parameters.SteamId, parameters.Date);
                 if (model == null)
                     return HttpStatusCode.NotFound;
 
@@ -41,7 +41,7 @@ namespace ItsGoStats.Routing
             Get["/{SteamId}/From/{StartDate:dateform}/To/{EndDate:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var constraint = DateConstraint.Merge(parameters.StartDate, parameters.EndDate);
-                var model = await CreatePlayerModelAsync(parameters.SteamId, parameters.Date);
+                var model = await CreateModelAsync(parameters.SteamId, parameters.Date);
                 if (model == null)
                     return HttpStatusCode.NotFound;
 
