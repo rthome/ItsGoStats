@@ -11,6 +11,8 @@ using ItsGoStats.Parsing;
 
 using Nancy.Hosting.Self;
 
+using Nito.AsyncEx;
+
 namespace ItsGoStats
 {
     class Program
@@ -31,7 +33,7 @@ namespace ItsGoStats
             await DatabaseSchema.DumpDatabaseAsync(connection, dumpFile);
         }
 
-        static async Task<int> AsyncMain(string[] args)
+        static async Task<ServerConfiguration> LoadConfigurationAsync(string[] args)
         {
             if (args.Length > 0 && File.Exists(args[0]))
                 return await ServerConfiguration.LoadAsync(args[0]);
@@ -42,7 +44,7 @@ namespace ItsGoStats
             return new ServerConfiguration();
         }
 
-        static async Task<int> Main(string[] args)
+        static async Task<int> AsyncMain(string[] args)
         {
             var configuration = await LoadConfigurationAsync(args);
 
