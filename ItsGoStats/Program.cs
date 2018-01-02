@@ -11,8 +11,6 @@ using ItsGoStats.Parsing;
 
 using Nancy.Hosting.Self;
 
-using Nito.AsyncEx;
-
 namespace ItsGoStats
 {
     class Program
@@ -35,17 +33,28 @@ namespace ItsGoStats
 
         static async Task<int> AsyncMain(string[] args)
         {
-            await DatabaseProvider.InitializeAsync();
+            if (args.Length > 0 && File.Exists(args[0]))
+                return await ServerConfiguration.LoadAsync(args[0]);
+            if (File.Exists("ItsGoStats.json"))
+                return await ServerConfiguration.LoadAsync("ItsGoStats.json");
 
-            if (args.Length > 0)
-                await Startup(DatabaseProvider.Connection, args[0]);
+            // TODO: Log that we are running with the default config
+            return new ServerConfiguration();
+        }
+
+        static async Task<int> Main(string[] args)
+        {
+            var configuration = await LoadConfigurationAsync(args);
+
+            await DatabaseProvider.InitializeAsync();
+            await Startup(DatabaseProvider.Connection, configuration.LogDirectory);
 
             var hostConfig = new HostConfiguration
             {
-                
+
             };
 
-            var listenUri = new Uri("http://localhost:5555");
+            var listenUri = new Uri(configuration.ListenUri);
             using (var host = new NancyHost(hostConfig, listenUri))
             {
                 host.Start();

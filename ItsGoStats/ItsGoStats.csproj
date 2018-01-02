@@ -66,6 +66,9 @@
     <Reference Include="Nancy.ViewEngines.Razor, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.Viewengines.Razor.1.4.3\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Nito.AsyncEx, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
     </Reference>
@@ -110,6 +113,7 @@
     <Compile Include="Routing\MainModule.cs" />
     <Compile Include="Routing\PlayerModule.cs" />
     <Compile Include="Routing\PlayersModule.cs" />
+    <Compile Include="ServerConfiguration.cs" />
     <Compile Include="TypeHandlers.cs" />
   </ItemGroup>
   <ItemGroup>
