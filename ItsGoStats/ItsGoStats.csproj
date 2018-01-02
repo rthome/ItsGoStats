@@ -96,8 +96,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\DateForm.cs" />
-    <Compile Include="Common\DateFormRoutingConstraint.cs" />
+    <Compile Include="Common\DateConstraint.cs" />
+    <Compile Include="Models\PlayerModel.cs" />
+    <Compile Include="Routing\DateFormRoutingConstraint.cs" />
     <Compile Include="DatabaseProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -132,9 +133,7 @@
       <Name>ItsGoStats.Parsing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\css\bootstrap-grid.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

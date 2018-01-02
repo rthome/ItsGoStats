@@ -7,6 +7,8 @@
 <ul>
     @foreach (var player in @Model)
     {
-        <li>@player.Name (@player.SteamId)</li>
+        <li>
+            <a href="/Player/@player.SteamId">@player.Name (@player.SteamId)</a>
+        </li>
     }
 </ul>
