@@ -1,12 +1,14 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SQLite;
 using System.Threading.Tasks;
 
 using Dapper;
 
 using ItsGoStats.Caching;
+using ItsGoStats.Caching.Entities;
 
-namespace ItsGoStats
+namespace ItsGoStats.Common
 {
     static class DatabaseProvider
     {
@@ -27,6 +29,15 @@ namespace ItsGoStats
 
             Connection = conn;
             IsInitialized = true;
+        }
+
+        public static async Task<Player> GetPlayerAsync(string steamId)
+        {
+            if (!IsInitialized)
+                throw new InvalidOperationException($"{nameof(DatabaseProvider)} is not initialized.");
+
+            return await Connection.QuerySingleOrDefaultAsync<Player>(
+                "select * from Player where Player.SteamId = @SteamId", new { SteamId = steamId });
         }
     }
 }

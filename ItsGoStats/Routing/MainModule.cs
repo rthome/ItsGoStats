@@ -1,7 +1,10 @@
-﻿using Dapper.Contrib.Extensions;
-using Dapper;
-using Nancy;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
+
 using ItsGoStats.Caching.Entities;
+using ItsGoStats.Common;
+
+using Nancy;
 
 namespace ItsGoStats.Routing
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 
 using ItsGoStats.Caching;
+using ItsGoStats.Common;
 using ItsGoStats.Parsing;
 
 using Nancy.Hosting.Self;

@@ -12,15 +12,12 @@ namespace ItsGoStats.Routing
         public PlayerModule()
             : base("/Player")
         {
-            async Task<Player> GetPlayerAsync(string steamId)
-            {
-                return await DatabaseProvider.Connection.QuerySingleOrDefaultAsync<Player>(
-                    "select * from Player where Player.SteamId = @SteamId", new { SteamId = steamId });
-            }
-
             async Task<PlayerModel> CreatePlayerModelAsync(string steamId, DateConstraint constraint)
             {
-                var player = await GetPlayerAsync(steamId);
+                var player = await DatabaseProvider.GetPlayerAsync(steamId);
+                if (player == null)
+                    return null;
+
                 var model = await PlayerModel.CreateAsync(player, constraint);
                 return model;
             }
@@ -33,6 +30,9 @@ namespace ItsGoStats.Routing
             Get["/{SteamId}/{Date:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var model = await CreatePlayerModelAsync(parameters.SteamId, parameters.Date);
+                if (model == null)
+                    return HttpStatusCode.NotFound;
+
                 ViewBag.Title = model.Player.Name;
 
                 return View[model];
@@ -42,6 +42,9 @@ namespace ItsGoStats.Routing
             {
                 var constraint = DateConstraint.Merge(parameters.StartDate, parameters.EndDate);
                 var model = await CreatePlayerModelAsync(parameters.SteamId, parameters.Date);
+                if (model == null)
+                    return HttpStatusCode.NotFound;
+
                 ViewBag.Title = model.Player.Name;
 
                 return View[model];
