@@ -1,0 +1,5 @@
+{
+  "LogDirectory": "~/csgo_logs",
+  "LogScanInterval": 30000,
+  "ListenUri": "http://localhost:5555"
+}
