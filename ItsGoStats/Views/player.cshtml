@@ -5,3 +5,23 @@
 }
 
 <h1>@Model.Player.Name</h1>
+<p class="lead">
+    <i>Statistics for</i> @Model.Start <i>to</i> @Model.End
+</p>
+
+<table class="table-dark">
+    <tbody>
+        <tr>
+            <td>Kills</td>
+            <td>@Model.Kills</td>
+        </tr>
+        <tr>
+            <td>Deaths</td>
+            <td>@Model.Deaths</td>
+        </tr>
+        <tr>
+            <td>Assists</td>
+            <td>@Model.Assists</td>
+        </tr>
+    </tbody>
+</table>

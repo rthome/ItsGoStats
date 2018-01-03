@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Dapper;
 
 using ItsGoStats.Caching.Entities;
 using ItsGoStats.Common;
@@ -16,7 +17,8 @@ namespace ItsGoStats.Routing
         {
             async Task<List<Game>> QueryGamesAsync(DateConstraint constraint)
             {
-                throw new NotImplementedException();
+                var games = await DatabaseProvider.Connection.QueryAsync<Game>("select * from Game where Game.Time >= @Start and Game.Time < @End", new { constraint.Start, constraint.End });
+                return games.AsList();
             }
 
             Get["/"] = _ =>
