@@ -7,7 +7,7 @@ using ItsGoStats.Parsing.Common;
 namespace ItsGoStats.Caching.Entities
 {
     [Table(nameof(Assist))]
-    public class Assist : IEntity
+    public class Assist : IEntityWithTimestamp
     {
         [Key]
         public int Id { get; set; }

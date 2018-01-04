@@ -57,6 +57,7 @@
     <Compile Include="Entities\Disconnect.cs" />
     <Compile Include="Entities\Game.cs" />
     <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Entities\IEntityWithTimestamp.cs" />
     <Compile Include="Entities\Kill.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Purchase.cs" />
