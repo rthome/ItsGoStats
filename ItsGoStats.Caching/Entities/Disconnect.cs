@@ -7,7 +7,7 @@ using ItsGoStats.Parsing.Common;
 namespace ItsGoStats.Caching.Entities
 {
     [Table(nameof(Disconnect))]
-    public class Disconnect
+    public class Disconnect : IEntity
     {
         [Key]
         public int Id { get; set; }

@@ -7,7 +7,7 @@ using ItsGoStats.Parsing.Common;
 namespace ItsGoStats.Caching.Entities
 {
     [Table(nameof(Round))]
-    public class Round
+    public class Round : IEntity
     {
         [Key]
         public int Id { get; set; }

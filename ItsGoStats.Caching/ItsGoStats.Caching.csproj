@@ -56,11 +56,15 @@
     <Compile Include="Entities\Assist.cs" />
     <Compile Include="Entities\Disconnect.cs" />
     <Compile Include="Entities\Game.cs" />
+    <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\Kill.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Purchase.cs" />
     <Compile Include="Entities\Round.cs" />
     <Compile Include="Entities\TeamSwitch.cs" />
+    <Compile Include="Iteration\EntityHandler.cs" />
+    <Compile Include="Iteration\IEntityHandler.cs" />
+    <Compile Include="Iteration\EntityStream.cs" />
     <Compile Include="GameInserter.cs" />
     <Compile Include="LogGroupInserter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
