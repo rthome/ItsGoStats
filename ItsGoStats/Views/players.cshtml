@@ -9,7 +9,7 @@
     @foreach (var player in @Model)
     {
         <li>
-            <a href="/Player/@player.SteamId">@player.Name (@player.SteamId)</a>
+            @RoutingHelper.PlayerLink(player);
         </li>
     }
 </ul>
