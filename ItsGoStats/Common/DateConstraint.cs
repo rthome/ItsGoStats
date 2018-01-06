@@ -47,6 +47,11 @@ namespace ItsGoStats.Common
             return false;
         }
 
+        public string ToUrlFragment()
+        {
+            throw new NotImplementedException();
+        }
+
         public static DateConstraint Merge(DateConstraint start, DateConstraint end)
         {
             var startTime = start.Start;

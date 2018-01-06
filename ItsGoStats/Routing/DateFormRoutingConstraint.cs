@@ -1,4 +1,5 @@
 ﻿using ItsGoStats.Common;
+
 using Nancy.Routing.Constraints;
 
 namespace ItsGoStats.Routing

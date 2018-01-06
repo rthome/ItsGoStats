@@ -1,5 +1,4 @@
-﻿
-using Nancy;
+﻿using Nancy;
 
 namespace ItsGoStats.Routing
 {
