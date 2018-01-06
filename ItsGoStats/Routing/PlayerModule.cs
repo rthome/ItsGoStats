@@ -9,8 +9,10 @@ namespace ItsGoStats.Routing
 {
     public class PlayerModule : NancyModule
     {
+        public const string BasePath = "/Player";
+
         public PlayerModule()
-            : base("/Player")
+            : base(BasePath)
         {
             async Task<PlayerModel> CreateModelAsync(string steamId, DateConstraint constraint)
             {

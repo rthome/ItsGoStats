@@ -10,8 +10,10 @@ namespace ItsGoStats.Routing
 {
     public class PlayersModule : NancyModule
     {
+        public const string BasePath = "/Players";
+
         public PlayersModule()
-            : base("/Players")
+            : base(BasePath)
         {
             Get["/", runAsync: true] = async (_, token) =>
             {

@@ -12,8 +12,10 @@ namespace ItsGoStats.Routing
 {
     public class GameModule : NancyModule
     {
+        public const string BasePath = "/Game";
+
         public GameModule()
-            : base("/Game")
+            : base(BasePath)
         {
             async Task<GameModel> CreateModelAsync(int gameId)
             {

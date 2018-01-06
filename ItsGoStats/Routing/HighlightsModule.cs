@@ -4,8 +4,10 @@ namespace ItsGoStats.Routing
 {
     public class HighlightsModule : NancyModule
     {
+        public const string BasePath = "/Highlights";
+
         public HighlightsModule()
-            : base("/Highlights")
+            : base(BasePath)
         {
             Get["/"] = _ =>
             {

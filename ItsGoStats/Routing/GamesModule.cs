@@ -12,8 +12,10 @@ namespace ItsGoStats.Routing
 {
     public class GamesModule : NancyModule
     {
+        public const string BasePath = "/Games";
+
         public GamesModule()
-            : base("/Games")
+            : base(BasePath)
         {
             async Task<List<Game>> QueryGamesAsync(DateConstraint constraint)
             {
