@@ -29,9 +29,6 @@ namespace ItsGoStats.Routing
             Get["/{Date:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var games = await QueryGamesAsync(parameters.Date);
-
-                ViewBag.Title = "Games";
-
                 return View["games.cshtml", games];
             };
         }

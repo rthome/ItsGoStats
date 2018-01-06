@@ -15,8 +15,6 @@ namespace ItsGoStats.Routing
         {
             Get["/", runAsync: true] = async (_, token) =>
             {
-                ViewBag.Title = "Players";
-
                 var players = await DatabaseProvider.Connection.GetAllAsync<Player>();
                 return View["players.cshtml", players.AsList()];
             };

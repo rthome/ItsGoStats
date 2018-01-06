@@ -9,8 +9,6 @@ namespace ItsGoStats.Routing
         {           
             Get["/"] = _ =>
             {
-                ViewBag.Title = "Index";
-
                 return View["index.cshtml"];
             };
         }

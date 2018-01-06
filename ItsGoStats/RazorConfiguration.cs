@@ -16,6 +16,7 @@ namespace ItsGoStats
 
         public IEnumerable<string> GetDefaultNamespaces()
         {
+            yield return "ItsGoStats.Helpers";
             yield return "ItsGoStats.Caching.Entities";
             yield return "ItsGoStats.Parsing.Common";
         }
