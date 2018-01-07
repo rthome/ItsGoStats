@@ -1,4 +1,5 @@
 ﻿@using ItsGoStats.Models;
+@using ItsGoStats.Extensions;
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<PlayerModel>>
 
@@ -14,6 +15,8 @@
     <thead>
         <tr>
             <th scope="col">Player</th>
+            <th scope="col">First Seen</th>
+            <th scope="col">Last Seen</th>
             <th scope="col">Kills</th>
             <th scope="col">Deaths</th>
             <th scope="col">Assists</th>
@@ -24,6 +27,8 @@
         {
         <tr>
             <td>@RoutingHelper.PlayerLink(playerModel.Player)</td>
+            <td>@playerModel.FirstSeen.HumanizeDate()</td>
+            <td>@playerModel.LastSeen.HumanizeDate()</td>
             <td>@playerModel.Kills</td>
             <td>@playerModel.Deaths</td>
             <td>@playerModel.Assists</td>

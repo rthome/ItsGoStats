@@ -1,4 +1,5 @@
 ﻿@using ItsGoStats.Models;
+@using ItsGoStats.Extensions;
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlayerModel>
 
@@ -27,6 +28,19 @@
         <a class="nav-link disabled" href="#">Progress</a>
     </li>
 </ul>
+
+<table class="my-1 table table-dark table-striped stat-grid">
+    <tbody>
+        <tr>
+            <th scope="row">First Seen</th>
+            <td>@Model.FirstSeen.HumanizeDate()</td>
+        </tr>
+        <tr>
+            <th scope="row">Last Seen</th>
+            <td>@Model.LastSeen.HumanizeDate()</td>
+        </tr>
+    </tbody>
+</table>
 
 <table class="table table-dark table-striped stat-grid">
     <tbody>

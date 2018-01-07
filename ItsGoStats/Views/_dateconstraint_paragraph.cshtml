@@ -1,7 +1,8 @@
 ﻿@using ItsGoStats.Common;
+@using ItsGoStats.Extensions;
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<DateConstraint>
 
 <p class="lead pb-4">
-    <i>Statistics from</i> @Model.Start.ToString("MMMM yyyy") <i>to</i> @Model.End.ToString("MMMM yyyy")
+    <i>Statistics from</i> <strong>@Model.Start.HumanizeDate()</strong> <i>to</i> <strong>@Model.End.HumanizeDate()</strong>
 </p>
