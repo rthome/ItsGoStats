@@ -8,8 +8,11 @@
     ViewBag.Title = "Players";
 }
 
-<h1>@ViewBag.Title</h1>
-@Html.Partial("_dateconstraint_paragraph", ViewBag.Date.Value)
+<div class="header-box">
+    <h1 class="display-3">@ViewBag.Title</h1>
+    <hr class="my-2" />
+    @Html.Partial("_dateconstraint_paragraph", ViewBag.Date.Value)
+</div>
 
 <table class="table table-dark table-striped table-hover stat-grid stat-grid">
     <thead>
