@@ -2,6 +2,6 @@
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<DateConstraint>
 
-<p class="lead">
-    <i>Statistics for</i> @Model.Start <i>to</i> @Model.End
+<p class="lead pb-4">
+    <i>Statistics from</i> @Model.Start.ToString("MMMM yyyy") <i>to</i> @Model.End.ToString("MMMM yyyy")
 </p>

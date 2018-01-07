@@ -5,6 +5,7 @@ using Dapper;
 
 using ItsGoStats.Caching.Entities;
 using ItsGoStats.Common;
+using ItsGoStats.Models;
 
 using Nancy;
 
@@ -31,9 +32,12 @@ namespace ItsGoStats.Routing
             Get["/{Date:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var games = await QueryGamesAsync(parameters.Date);
+                var models = new List<GameModel>();
+                foreach (var game in games)
+                    models.Add(await GameModel.CreateAsync(game));
 
                 ViewBag.Date = parameters.Date;
-                return View["games.cshtml", games];
+                return View["games.cshtml", models];
             };
         }
     }
