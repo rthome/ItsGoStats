@@ -1,26 +1,27 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+﻿@using ItsGoStats.Models;
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlayerModel>
 
 @{
-    Layout = "_base";
+    Layout = "base";
+    ViewBag.Title = Model.Player.Name;
 }
 
-<h1>@Model.Player.Name</h1>
-<p class="lead">
-    <i>Statistics for</i> @Model.Start <i>to</i> @Model.End
-</p>
+<h1>@ViewBag.Title</h1>
+@Html.Partial("_dateconstraint_paragraph", ViewBag.Date.Value)
 
 <table class="table table-dark table-striped stat-grid">
     <tbody>
         <tr>
-            <td>Kills</td>
+            <th scope="row">Kills</th>
             <td>@Model.Kills</td>
         </tr>
         <tr>
-            <td>Deaths</td>
+            <th scope="row">Deaths</th>
             <td>@Model.Deaths</td>
         </tr>
         <tr>
-            <td>Assists</td>
+            <th scope="row">Assists</th>
             <td>@Model.Assists</td>
         </tr>
     </tbody>

@@ -10,6 +10,7 @@ namespace ItsGoStats
 
         public IEnumerable<string> GetAssemblyNames()
         {
+            yield return "Nancy";
             yield return "ItsGoStats.Parsing";
             yield return "ItsGoStats.Caching";
         }

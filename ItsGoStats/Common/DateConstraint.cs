@@ -7,9 +7,9 @@ namespace ItsGoStats.Common
     {
         static readonly (string, Func<DateConstraint>)[] SpecialPatterns = new (string, Func<DateConstraint>)[]
         {
-            ("AllTime", () => new DateConstraint(DateTime.MinValue, DateTime.MaxValue)),
-            ("Today", () => new DateConstraint(DateTime.Today, DateTime.Today.AddDays(1))),
-            ("Yesterday", () => new DateConstraint(DateTime.Today.AddDays(-1), DateTime.Today)),
+            ("AllTime", () => AllTime),
+            ("Today", () => Today),
+            ("Yesterday", () => Yesterday),
         };
 
         static readonly (string, Func<DateTime, DateTime>)[] KnownPatterns = new (string, Func<DateTime, DateTime>)[]
@@ -17,6 +17,10 @@ namespace ItsGoStats.Common
             ("MMMMyyyy", dt => dt.AddMonths(1)),
             ("yyyy", dt => dt.AddYears(1)),
         };
+
+        public static DateConstraint AllTime => new DateConstraint(DateTime.MinValue, DateTime.MaxValue);
+        public static DateConstraint Today => new DateConstraint(DateTime.Today, DateTime.Today.AddDays(1));
+        public static DateConstraint Yesterday => new DateConstraint(DateTime.Today.AddDays(-1), DateTime.Today);
 
         public DateTime Start { get; }
 

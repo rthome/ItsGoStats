@@ -1,6 +1,11 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+﻿@using ItsGoStats.Models;
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<GameModel>>
 
 @{
-    Layout = "_base";
+    Layout = "base";
     ViewBag.Title = "Games";
 }
+
+<h1>@ViewBag.Title</h1>
+@Html.Partial("_dateconstraint_paragraph", ViewBag.Date.Value)

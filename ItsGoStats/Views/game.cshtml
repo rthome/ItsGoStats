@@ -1,7 +1,11 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+﻿@using ItsGoStats.Models;
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<GameModel>
 
 @{
-    Layout = "_base";
+    Layout = "base";
+    ViewBag.Title = "Game";
 }
 
+<h1>@ViewBag.Title</h1>
 <h2>Coming soon!</h2>

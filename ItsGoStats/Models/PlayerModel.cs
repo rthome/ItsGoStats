@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Dapper;
 
@@ -11,10 +10,6 @@ namespace ItsGoStats.Models
     public class PlayerModel
     {
         public Player Player { get; set; }
-
-        public DateTime Start { get; set; }
-
-        public DateTime End { get; set; }
 
         public int Kills { get; set; }
 
@@ -32,8 +27,6 @@ namespace ItsGoStats.Models
             return new PlayerModel
             {
                 Player = player,
-                Start = constraint.Start,
-                End = constraint.End,
                 Kills = kills,
                 Deaths = deaths,
                 Assists = assists,

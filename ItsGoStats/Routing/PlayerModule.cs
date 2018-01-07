@@ -35,20 +35,18 @@ namespace ItsGoStats.Routing
                 if (model == null)
                     return HttpStatusCode.NotFound;
 
-                ViewBag.Title = model.Player.Name;
-
+                ViewBag.Date = parameters.Date;
                 return View[model];
             };
 
             Get["/{SteamId}/From/{StartDate:dateform}/To/{EndDate:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var constraint = DateConstraint.Merge(parameters.StartDate, parameters.EndDate);
-                var model = await CreateModelAsync(parameters.SteamId, parameters.Date);
+                var model = await CreateModelAsync(parameters.SteamId, constraint);
                 if (model == null)
                     return HttpStatusCode.NotFound;
 
-                ViewBag.Title = model.Player.Name;
-
+                ViewBag.Date = constraint;
                 return View[model];
             };
         }
