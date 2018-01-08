@@ -24,7 +24,6 @@ namespace ItsGoStats.Routing
                 var models = new List<PlayerModel>();
                 foreach (var player in players)
                     models.Add(await PlayerModel.CreateAsync(player, DateConstraint.AllTime));
-                models.Sort((a, b) => Nullable.Compare(a.FirstSeen, b.FirstSeen)); // desc
 
                 ViewBag.Date = DateConstraint.AllTime;
                 return View["players.cshtml", models];

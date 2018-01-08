@@ -1,5 +1,8 @@
-﻿@using ItsGoStats.Models;
+﻿@using System.Linq;
+
+@using ItsGoStats.Models;
 @using ItsGoStats.Extensions;
+@using ItsGoStats.Helpers;
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<PlayerModel>>
 
@@ -26,12 +29,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var playerModel in Model)
+        @foreach (var playerModel in Model.OrderByDescending(m => m.LastSeen).ThenBy(m => m.Player.Name))
         {
         <tr>
             <td>@RoutingHelper.PlayerLink(playerModel.Player)</td>
-            <td>@playerModel.FirstSeen.HumanizeDate()</td>
-            <td>@playerModel.LastSeen.HumanizeDate()</td>
+            <td>@playerModel.FirstSeen.HumanizeDate(shortForm: true)</td>
+            <td>@playerModel.LastSeen.HumanizeDate(shortForm: true)</td>
             <td>@playerModel.Kills</td>
             <td>@playerModel.Deaths</td>
             <td>@playerModel.Assists</td>

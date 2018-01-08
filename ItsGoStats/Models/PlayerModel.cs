@@ -46,8 +46,8 @@ namespace ItsGoStats.Models
             var kills = await DatabaseProvider.Connection.ExecuteScalarAsync<int>("select count(*) from Kill where Kill.KillerId = @Id and Kill.Time >= @Start and Kill.Time < @End", parameters);
             var deaths = await DatabaseProvider.Connection.ExecuteScalarAsync<int>("select count(*) from Kill where Kill.VictimId = @Id and Kill.Time >= @Start and Kill.Time < @End", parameters);
             var assists = await DatabaseProvider.Connection.ExecuteScalarAsync<int>("select count(*) from Assist where Assist.AssisterId = @Id and Assist.Time >= @Start and Assist.Time < @End", parameters);
-            var firstSeen = await DatabaseProvider.Connection.QueryFirstOrDefaultAsync<DateTime?>("select Time from Kill where Kill.KillerId = @Id order by Kill.Time asc limit 1", parameters);
-            var lastSeen = await DatabaseProvider.Connection.QueryFirstOrDefaultAsync<DateTime?>("select Time from Kill where Kill.KillerId = @Id order by Kill.Time desc limit 1", parameters);
+            var firstSeen = await DatabaseProvider.Connection.QueryFirstOrDefaultAsync<DateTime?>("select date(Time) from Kill where Kill.KillerId = @Id order by Kill.Time asc limit 1", parameters);
+            var lastSeen = await DatabaseProvider.Connection.QueryFirstOrDefaultAsync<DateTime?>("select date(Time) from Kill where Kill.KillerId = @Id order by Kill.Time desc limit 1", parameters);
 
             return new PlayerModel
             {
