@@ -116,6 +116,7 @@
     <Compile Include="Routing\MainModule.cs" />
     <Compile Include="Routing\PlayerModule.cs" />
     <Compile Include="Routing\PlayersModule.cs" />
+    <Compile Include="Routing\TeamsModule.cs" />
     <Compile Include="ServerConfiguration.cs" />
     <Compile Include="TypeHandlers.cs" />
   </ItemGroup>
@@ -175,6 +176,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\games.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\teams.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\highlights.cshtml">

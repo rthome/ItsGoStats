@@ -4,6 +4,8 @@ namespace ItsGoStats.Routing
 {
     public class MainModule : NancyModule
     {
+        public const string BasePath = "";
+
         public MainModule()
         {           
             Get["/"] = _ =>

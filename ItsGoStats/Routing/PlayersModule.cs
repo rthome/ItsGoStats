@@ -19,12 +19,13 @@ namespace ItsGoStats.Routing
 
         async Task<List<PlayerModel>> CreateModelsAsync(DateConstraint constraint)
         {
+            // TODO: Check player activity with team switches in the given time range
             const string PlayerQuery = @"
                 select Player.* from Player
                 inner join (
-                    select Kill.KillerId, max(date(Kill.Time)) as Time from Kill
-                    group by Kill.KillerId) LastKill on Player.Id = LastKill.KillerId
-                where LastKill.Time >= @Start and LastKill.Time < @End";
+                    select TeamSwitch.PlayerId, max(date(TeamSwitch.Time)) as Time from TeamSwitch
+                    group by TeamSwitch.PlayerId) LatestTeamSwitch on Player.Id = LatestTeamSwitch.PlayerId
+                where LatestTeamSwitch.Time >= @Start and LatestTeamSwitch.Time < @End";
 
             IEnumerable<Player> players;
             if (constraint.Start == DateTime.MinValue && constraint.End == DateTime.MaxValue)
