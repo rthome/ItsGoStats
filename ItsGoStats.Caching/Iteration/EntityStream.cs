@@ -3,100 +3,96 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Dapper;
+
 using ItsGoStats.Caching.Entities;
 
 namespace ItsGoStats.Caching.Iteration
 {
     public class EntityStream
     {
-        readonly IEntityHandler handler;
         readonly IReadOnlyList<IEntityWithTimestamp> entities;
 
         #region Static Query/Creation Methods
 
         static async Task<List<IEntityWithTimestamp>> QueryEntitiesForGamesAsync(IDbConnection connection, params int[] gameIds)
         {
-            const string Query = @"
-                select * from Assist where Assist.GameId in @Ids order by Assist.Time
-                select * from Disconnect where Disconnect.GameId in @Ids order by Disconnect.Time
-                select * from Game where Game.GameId in @Ids order by Game.Time
-                select * from Kill where Kill.GameId in @Ids order by Kill.Time
-                select * from Purchase where Purchase.GameId in @Ids order by Purchase.Time
-                select * from Round where Round.GameId in @Ids order by Round.Time
-                select * from TeamSwitch where TeamSwitch.GameId in @Ids order by TeamSwitch.Time";
+            var games = await connection.QueryAsync<Game>("select * from Game where Id in @Ids order by Time", new { Ids = gameIds });
+            var rounds = await connection.QueryAsync<Round>("select * from Round where GameId in @Ids order by Time", new { Ids = gameIds });
 
-            using (var reader = await connection.QueryMultipleAsync(Query, new { Ids = gameIds }))
+            var parameters = new { GameIds = gameIds, RoundIds = rounds.Select(r => r.Id).ToList() };
+            var entitySets = new IEnumerable<IEntityWithTimestamp>[]
             {
-                var entitySets = new IEnumerable<IEntityWithTimestamp>[]
-                {
-                    await reader.ReadAsync<Assist>(),
-                    await reader.ReadAsync<Disconnect>(),
-                    await reader.ReadAsync<Game>(),
-                    await reader.ReadAsync<Kill>(),
-                    await reader.ReadAsync<Purchase>(),
-                    await reader.ReadAsync<Round>(),
-                    await reader.ReadAsync<TeamSwitch>(),
-                };
+                games,
+                rounds,
+                await connection.QueryAsync<Assist>("select * from Assist where Assist.RoundId in @RoundIds order by Assist.Time", parameters),
+                await connection.QueryAsync<Disconnect>("select * from Disconnect where Disconnect.GameId in @GameIds order by Disconnect.Time", parameters),
+                await connection.QueryAsync<Kill>("select * from Kill where Kill.RoundId in @RoundIds order by Kill.Time", parameters),
+                await connection.QueryAsync<Purchase>("select * from Purchase where Purchase.RoundId in @RoundIds order by Purchase.Time", parameters),
+                await connection.QueryAsync<TeamSwitch>("select * from TeamSwitch where TeamSwitch.GameId in @GameIds order by TeamSwitch.Time", parameters),
+            };
 
-                var results = entitySets.SelectMany(_ => _).ToList();
-                results.Sort((l, r) => l.Time.CompareTo(r.Time));
-                return results;
-            }
+            var results = entitySets.SelectMany(_ => _).ToList();
+            results.Sort((l, r) => l.Time.CompareTo(r.Time));
+            return results;
         }
 
-        public static async Task<EntityStream> CreateAsync(IDbConnection connection, IEntityHandler handler, int gameId)
+        public static async Task<EntityStream> CreateAsync(IDbConnection connection, int gameId)
         {
             var entities = await QueryEntitiesForGamesAsync(connection, gameId);
-            return new EntityStream(handler, entities);
+            return new EntityStream(entities);
         }
 
-        public static async Task<EntityStream> CreateAsync(IDbConnection connection, IEntityHandler handler, DateTime start, DateTime end)
+        public static async Task<EntityStream> CreateAsync(IDbConnection connection, DateTime start, DateTime end)
         {
             var gameIds = await connection.QueryAsync<int>("select Id from Game where Game.Time >= @Start and Game.Time < @End", new { Start = start, End = end });
             var entities = await QueryEntitiesForGamesAsync(connection, gameIds.ToArray());
-            return new EntityStream(handler, entities);
+            return new EntityStream(entities);
         }
 
         #endregion
 
-        public void Execute()
+        public void Execute(params IEntityHandler[] handlers)
         {
+            var handlerList = handlers.AsList();
+
+            handlerList.ForEach(h => h.OnStart());
             for (int i = 0; i < entities.Count; i++)
             {
                 var entity = entities[i];
                 switch (entity)
                 {
                     case Assist assist:
-                        handler.OnAssist(i, assist);
+                        handlerList.ForEach(h => h.OnAssist(i, assist));
                         break;
                     case Disconnect disconnect:
-                        handler.OnDisconnect(i, disconnect);
+                        handlerList.ForEach(h => h.OnDisconnect(i, disconnect));
                         break;
                     case Game game:
-                        handler.OnGame(i, game);
+                        handlerList.ForEach(h => h.OnGame(i, game));
                         break;
                     case Kill kill:
-                        handler.OnKill(i, kill);
+                        handlerList.ForEach(h => h.OnKill(i, kill));
                         break;
                     case Purchase purchase:
-                        handler.OnPurchase(i, purchase);
+                        handlerList.ForEach(h => h.OnPurchase(i, purchase));
                         break;
                     case Round round:
-                        handler.OnRound(i, round);
+                        handlerList.ForEach(h => h.OnRound(i, round));
                         break;
                     case TeamSwitch teamSwitch:
-                        handler.OnTeamSwitch(i, teamSwitch);
+                        handlerList.ForEach(h => h.OnTeamSwitch(i, teamSwitch));
                         break;
                 }
             }
+            handlerList.ForEach(h => h.OnEnd());
         }
 
-        public async Task ExecuteAsync() => await Task.Run(() => Execute());
+        public async Task ExecuteAsync(params IEntityHandler[] handlers) => await Task.Run(() => Execute(handlers));
 
-        public EntityStream(IEntityHandler handler, IReadOnlyList<IEntityWithTimestamp> entities)
+        public EntityStream(IReadOnlyList<IEntityWithTimestamp> entities)
         {
-            this.handler = handler;
             this.entities = entities;
         }
     }

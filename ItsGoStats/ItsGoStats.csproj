@@ -102,7 +102,9 @@
     <Compile Include="Common\DateConstraint.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\IntegerExtensions.cs" />
+    <Compile Include="Helpers\FormatHelper.cs" />
     <Compile Include="Helpers\RoutingHelper.cs" />
+    <Compile Include="Models\Analyzers\TeamHandler.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Routing\DateFormRoutingConstraint.cs" />

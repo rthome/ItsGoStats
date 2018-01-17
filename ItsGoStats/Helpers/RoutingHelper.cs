@@ -6,7 +6,7 @@ using Nancy.ViewEngines.Razor;
 
 namespace ItsGoStats.Helpers
 {
-    public class RoutingHelper
+    public static class RoutingHelper
     {
         public static IHtmlString PlayerLink(Player player, string cssClasses = null, DateConstraint dateConstraint = null)
         {
@@ -14,6 +14,15 @@ namespace ItsGoStats.Helpers
             if (cssClasses != null)
                 classesFragment = $"class=\"{cssClasses}\"";
             var markup = $"<a {classesFragment} href=\"{PlayerModule.BasePath}/{player.SteamId}/{dateConstraint?.ToUrlFragment()}\">{player.Name}</a>";
+            return new NonEncodedHtmlString(markup);
+        }
+
+        public static IHtmlString GameLink(Game game, string cssClasses = null, DateConstraint dateConstraint = null)
+        {
+            string classesFragment = null;
+            if (cssClasses != null)
+                classesFragment = $"class=\"{cssClasses}\"";
+            var markup = $"<a {classesFragment} href=\"{GameModule.BasePath}/{game.Id}/{dateConstraint?.ToUrlFragment()}\">{game.Map}</a>";
             return new NonEncodedHtmlString(markup);
         }
     }

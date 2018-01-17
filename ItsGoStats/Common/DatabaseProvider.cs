@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Threading.Tasks;
@@ -36,8 +37,13 @@ namespace ItsGoStats.Common
             if (!IsInitialized)
                 throw new InvalidOperationException($"{nameof(DatabaseProvider)} is not initialized.");
 
-            return await Connection.QuerySingleOrDefaultAsync<Player>(
-                "select * from Player where Player.SteamId = @SteamId", new { SteamId = steamId });
+            return await Connection.QuerySingleOrDefaultAsync<Player>("select * from Player where Player.SteamId = @SteamId", new { SteamId = steamId });
+        }
+
+        public static async Task<List<Player>> MapPlayersAsync(IEnumerable<int> playerIds)
+        {
+            var players = await Connection.QueryAsync<Player>("select * from Player where Player.Id in @Ids", new { Ids = playerIds });
+            return players.AsList();
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿@using ItsGoStats.Models;
+﻿@using System.Linq;
+
+@using ItsGoStats.Models;
+@using ItsGoStats.Helpers
+@using ItsGoStats.Parsing.Common;
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<GameModel>>
 
@@ -12,3 +16,29 @@
     <hr class="my-2" />
     @Html.Partial("_dateconstraint_paragraph", ViewBag.Date.Value)
 </div>
+
+<table class="table table-sm table-striped stat-grid">
+    <thead>
+        <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Map</th>
+            <th scope="col">Score</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Counter-Terrorists</th>
+            <th scope="col">Terrorists</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var gameModel in Model.OrderByDescending(m => m.Game.Time))
+        {
+            <tr>
+                <td>@gameModel.Game.Time.ToShortDateString()</td>
+                <td>@RoutingHelper.GameLink(gameModel.Game, dateConstraint: ViewBag.Date.Value)</td>
+                <td>@FormatHelper.FormatScore(gameModel)</td>
+                <td>@gameModel.Game.ElapsedMinutes min</td>
+                <td>@FormatHelper.FormatTeam(gameModel.CounterTerrorists, Team.CounterTerrorists, ViewBag.Date.Value)</td>
+                <td>@FormatHelper.FormatTeam(gameModel.Terrorists, Team.Terrorists, ViewBag.Date.Value)</td>
+            </tr>
+        }
+    </tbody>
+</table>

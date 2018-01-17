@@ -51,11 +51,6 @@ namespace ItsGoStats.Common
             return false;
         }
 
-        public string ToUrlFragment()
-        {
-            throw new NotImplementedException();
-        }
-
         public static DateConstraint Merge(DateConstraint start, DateConstraint end)
         {
             var startTime = start.Start;
@@ -64,6 +59,14 @@ namespace ItsGoStats.Common
                 return new DateConstraint(startTime, endTime);
             else
                 return new DateConstraint(endTime, startTime);
+        }
+
+        public string ToUrlFragment()
+        {
+            // TODO: Properly implement this
+            var start = Start.ToString("MMMMyyyy");
+            var end = End.ToString("MMMMyyyy");
+            return $"From/{start}/To/{end}";
         }
 
         public DateConstraint(DateTime start, DateTime end)

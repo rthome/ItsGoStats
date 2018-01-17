@@ -4,6 +4,10 @@ namespace ItsGoStats.Caching.Iteration
 {
     public interface IEntityHandler
     {
+        void OnStart();
+
+        void OnEnd();
+
         void OnAssist(int index, Assist entity);
 
         void OnDisconnect(int index, Disconnect entity);

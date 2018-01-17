@@ -1,7 +1,6 @@
 ﻿@using System.Linq;
 
 @using ItsGoStats.Models;
-@using ItsGoStats.Extensions;
 @using ItsGoStats.Helpers;
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<PlayerModel>>
@@ -21,24 +20,20 @@
     <thead>
         <tr>
             <th scope="col">Player</th>
-            <th scope="col">First Seen</th>
-            <th scope="col">Last Seen</th>
             <th scope="col">Kills</th>
-            <th scope="col">Deaths</th>
             <th scope="col">Assists</th>
+            <th scope="col">Deaths</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var playerModel in Model.OrderByDescending(m => m.LastSeen).ThenBy(m => m.Player.Name))
+        @foreach (var playerModel in Model.OrderByDescending(m => m.Kills).ThenBy(m => m.Player.Name))
         {
-        <tr>
-            <td>@RoutingHelper.PlayerLink(playerModel.Player)</td>
-            <td>@playerModel.FirstSeen.HumanizeDate(shortForm: true)</td>
-            <td>@playerModel.LastSeen.HumanizeDate(shortForm: true)</td>
-            <td>@playerModel.Kills</td>
-            <td>@playerModel.Deaths</td>
-            <td>@playerModel.Assists</td>
-        </tr>
+            <tr>
+                <td>@RoutingHelper.PlayerLink(playerModel.Player, dateConstraint: ViewBag.Date.Value)</td>
+                <td>@playerModel.Kills</td>
+                <td>@playerModel.Assists</td>
+                <td>@playerModel.Deaths</td>
+            </tr>
         }
     </tbody>
 </table>
