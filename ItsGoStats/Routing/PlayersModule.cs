@@ -19,7 +19,6 @@ namespace ItsGoStats.Routing
 
         async Task<List<PlayerModel>> CreateModelsAsync(DateConstraint constraint)
         {
-            // TODO: Check player activity with team switches in the given time range
             const string PlayerQuery = @"
                 select Player.* from Player
                 inner join (
@@ -47,20 +46,11 @@ namespace ItsGoStats.Routing
                 return Response.AsRedirect("/Players/Today");
             };
 
-            Get["/{Date:dateform}", runAsync: true] = async (parameters, token) =>
+            Get["/{Date*:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var models = await CreateModelsAsync((DateConstraint)parameters.Date);
 
                 ViewBag.Date = parameters.Date;
-                return View["players.cshtml", models];
-            };
-
-            Get["/From/{StartDate:dateform}/To/{EndDate:dateform}", runAsync: true] = async (parameters, token) =>
-            {
-                var date = DateConstraint.Merge((DateConstraint)parameters.StartDate, (DateConstraint)parameters.EndDate);
-                var models = await CreateModelsAsync(date);
-
-                ViewBag.Date = date;
                 return View["players.cshtml", models];
             };
         }

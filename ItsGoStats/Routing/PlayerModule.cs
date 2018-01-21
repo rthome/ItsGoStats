@@ -29,24 +29,13 @@ namespace ItsGoStats.Routing
                 return Response.AsRedirect($"/Player/{parameters.SteamId}/AllTime");
             };
 
-            Get["/{SteamId}/{Date:dateform}", runAsync: true] = async (parameters, token) =>
+            Get["/{SteamId}/{Date*:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var model = await CreateModelAsync(parameters.SteamId, parameters.Date);
                 if (model == null)
                     return HttpStatusCode.NotFound;
 
                 ViewBag.Date = parameters.Date;
-                return View[model];
-            };
-
-            Get["/{SteamId}/From/{StartDate:dateform}/To/{EndDate:dateform}", runAsync: true] = async (parameters, token) =>
-            {
-                var constraint = DateConstraint.Merge((DateConstraint)parameters.StartDate, (DateConstraint)parameters.EndDate);
-                var model = await CreateModelAsync(parameters.SteamId, constraint);
-                if (model == null)
-                    return HttpStatusCode.NotFound;
-
-                ViewBag.Date = constraint;
                 return View[model];
             };
         }

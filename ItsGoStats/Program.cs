@@ -49,7 +49,7 @@ namespace ItsGoStats
             var configuration = await LoadConfigurationAsync(args);
 
             await DatabaseProvider.InitializeAsync();
-            await Startup(DatabaseProvider.Connection, configuration.LogDirectory);
+            //await Startup(DatabaseProvider.Connection, configuration.LogDirectory);
 
             var hostConfig = new HostConfiguration
             {

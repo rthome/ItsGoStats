@@ -29,7 +29,7 @@ namespace ItsGoStats.Routing
                 return Response.AsRedirect("/Games/Today");
             };
 
-            Get["/{Date:dateform}", runAsync: true] = async (parameters, token) =>
+            Get["/{Date*:dateform}", runAsync: true] = async (parameters, token) =>
             {
                 var games = await QueryGamesAsync(parameters.Date);
                 var models = new List<GameModel>();

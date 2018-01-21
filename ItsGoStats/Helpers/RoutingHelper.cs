@@ -13,7 +13,7 @@ namespace ItsGoStats.Helpers
             string classesFragment = null;
             if (cssClasses != null)
                 classesFragment = $"class=\"{cssClasses}\"";
-            var markup = $"<a {classesFragment} href=\"{PlayerModule.BasePath}/{player.SteamId}/{dateConstraint?.ToUrlFragment()}\">{player.Name}</a>";
+            var markup = $"<a {classesFragment} href=\"{PlayerModule.BasePath}/{player.SteamId}/{dateConstraint?.UrlFragment}\">{player.Name}</a>";
             return new NonEncodedHtmlString(markup);
         }
 
@@ -22,7 +22,7 @@ namespace ItsGoStats.Helpers
             string classesFragment = null;
             if (cssClasses != null)
                 classesFragment = $"class=\"{cssClasses}\"";
-            var markup = $"<a {classesFragment} href=\"{GameModule.BasePath}/{game.Id}/{dateConstraint?.ToUrlFragment()}\">{game.Map}</a>";
+            var markup = $"<a {classesFragment} href=\"{GameModule.BasePath}/{game.Id}/{dateConstraint?.UrlFragment}\">{game.Map}</a>";
             return new NonEncodedHtmlString(markup);
         }
     }
