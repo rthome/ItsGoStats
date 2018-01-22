@@ -8,7 +8,7 @@ namespace ItsGoStats.Common
     {
         #region Static Properties
 
-        static readonly Regex FromToRegex = new Regex(@"^/?(From/([^/]+)/To/([^/]+)/?$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        static readonly Regex FromToRegex = new Regex(@"^/?(From/([^/]+)/To/([^/]+))/?$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         static readonly (string, Func<DateTime, DateTime>)[] KnownPatterns = new(string, Func<DateTime, DateTime>)[]
         {
