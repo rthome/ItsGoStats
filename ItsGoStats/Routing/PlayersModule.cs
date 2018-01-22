@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Dapper;
@@ -38,20 +39,27 @@ namespace ItsGoStats.Routing
             return models;
         }
 
+        async Task<dynamic> ShowPlayersAsync(DateConstraint dateConstraint, CancellationToken token)
+        {
+            var models = await CreateModelsAsync(dateConstraint);
+
+            ViewBag.Date = dateConstraint;
+            return View["players.cshtml", models];
+        }
+
         public PlayersModule()
             : base(BasePath)
         {
-            Get["/"] = _ =>
-            {
-                return Response.AsRedirect("/Players/Today");
-            };
+            Get["/"] = _ => Response.AsRedirect("/Players/Today");
 
-            Get["/{Date*:dateform}", runAsync: true] = async (parameters, token) =>
-            {
-                var models = await CreateModelsAsync((DateConstraint)parameters.Date);
+            Get["/{Date:dateform}", runAsync: true] = async (parameters, token) => await ShowPlayersAsync((DateConstraint)parameters.Date, token);
 
-                ViewBag.Date = parameters.Date;
-                return View["players.cshtml", models];
+            Get["/From/{StartDate}/To/{EndDate}", runAsync: true] = async (parameters, token) =>
+            {
+                if (DateConstraint.TryParse(parameters.StartDate, parameters.EndDate, out DateConstraint dateConstraint))
+                    return await ShowPlayersAsync(dateConstraint, token);
+                else
+                    return HttpStatusCode.NotFound;
             };
         }
     }

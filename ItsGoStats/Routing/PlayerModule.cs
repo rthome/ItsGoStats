@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 using ItsGoStats.Common;
 using ItsGoStats.Models;
@@ -24,19 +25,26 @@ namespace ItsGoStats.Routing
                 return model;
             }
 
-            Get["/{SteamId}"] = parameters =>
+            async Task<dynamic> ShowPlayerAsync(string steamId, DateConstraint dateConstraint, CancellationToken token)
             {
-                return Response.AsRedirect($"/Player/{parameters.SteamId}/AllTime");
-            };
-
-            Get["/{SteamId}/{Date*:dateform}", runAsync: true] = async (parameters, token) =>
-            {
-                var model = await CreateModelAsync(parameters.SteamId, parameters.Date);
+                var model = await CreateModelAsync(steamId, dateConstraint);
                 if (model == null)
                     return HttpStatusCode.NotFound;
 
-                ViewBag.Date = parameters.Date;
+                ViewBag.Date = dateConstraint;
                 return View[model];
+            }
+
+            Get["/{SteamId}"] = parameters => Response.AsRedirect($"/Player/{parameters.SteamId}/Today");
+
+            Get["/{SteamId}/{Date:dateform}", runAsync: true] = async (parameters, token) => await ShowPlayerAsync(parameters.SteamId, (DateConstraint)parameters.Date, token);
+
+            Get["/{SteamId}/From/{StartDate}/To/{EndDate}", runAsync: true] = async (parameters, token) =>
+            {
+                if (DateConstraint.TryParse(parameters.StartDate, parameters.EndDate, out DateConstraint dateConstraint))
+                    return await ShowPlayerAsync(parameters.SteamId, dateConstraint, token);
+                else
+                    return HttpStatusCode.NotFound;
             };
         }
     }

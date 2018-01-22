@@ -17,7 +17,7 @@ namespace ItsGoStats
 {
     class Program
     {
-        static async Task Startup(IDbConnection connection, string logPath)
+        static async Task StartupAsync(IDbConnection connection, string logPath)
         {
             var logFileGroups = LogGroup.FromDirectory(logPath).AsList();
             foreach (var group in logFileGroups)
@@ -49,7 +49,7 @@ namespace ItsGoStats
             var configuration = await LoadConfigurationAsync(args);
 
             await DatabaseProvider.InitializeAsync();
-            //await Startup(DatabaseProvider.Connection, configuration.LogDirectory);
+            await StartupAsync(DatabaseProvider.Connection, configuration.LogDirectory);
 
             var hostConfig = new HostConfiguration
             {

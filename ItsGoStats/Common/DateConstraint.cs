@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace ItsGoStats.Common
 {
     public class DateConstraint
     {
         #region Static Properties
-
-        static readonly Regex FromToRegex = new Regex(@"^/?(From/([^/]+)/To/([^/]+))/?$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         static readonly (string, Func<DateTime, DateTime>)[] KnownPatterns = new(string, Func<DateTime, DateTime>)[]
         {
@@ -20,6 +17,7 @@ namespace ItsGoStats.Common
         {
             ("Today", () => DateTime.Today, dt => dt.AddDays(1)),
             ("Yesterday", () => DateTime.Today.AddDays(-1), dt => dt.AddDays(1)),
+            ("AllTime", () => DateTime.MinValue, _ => DateTime.MaxValue),
         };
 
         static bool TryParseDateValue(string value, out DateTime start, out DateTime end)
@@ -48,24 +46,24 @@ namespace ItsGoStats.Common
             return false;
         }
 
+        public static bool TryParse(string from, string to, out DateConstraint result)
+        {
+            if (TryParseDateValue(from, out var start, out var _) && TryParseDateValue(to, out var _, out var end))
+            {
+                result = new DateConstraint(start, end, $"From/{from}/To/{to}");
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
         public static bool TryParse(string value, out DateConstraint result)
         {
-            var fromToMatch = FromToRegex.Match(value);
-            if (fromToMatch.Success)
+            if (TryParseDateValue(value, out var start, out var end))
             {
-                if (TryParseDateValue(fromToMatch.Groups[2].Value, out var start, out var _) && TryParseDateValue(fromToMatch.Groups[3].Value, out var _, out var end))
-                {
-                    result = new DateConstraint(start, end, value);
-                    return true;
-                }
-            }
-            else
-            {
-                if (TryParseDateValue(value, out var start, out var end))
-                {
-                    result = new DateConstraint(start, end, value);
-                    return true;
-                }
+                result = new DateConstraint(start, end, value);
+                return true;
             }
 
             result = default;
@@ -84,7 +82,7 @@ namespace ItsGoStats.Common
         {
             Start = start.Date;
             End = end.Date;
-            UrlFragment = urlFragment;
+            UrlFragment = urlFragment.TrimStart('/');
         }
     }
 }

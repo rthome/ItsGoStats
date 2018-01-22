@@ -8,12 +8,24 @@ namespace ItsGoStats.Helpers
 {
     public static class RoutingHelper
     {
+        public static string DateConstrainedLink(string baseLink, DateConstraint dateConstraint)
+        {
+            if (dateConstraint == null)
+                return baseLink;
+
+            var joiner = string.Empty;
+            if (!baseLink.EndsWith("/"))
+                joiner = "/";
+
+            return baseLink + joiner + dateConstraint.UrlFragment;
+        }
+
         public static IHtmlString PlayerLink(Player player, string cssClasses = null, DateConstraint dateConstraint = null)
         {
             string classesFragment = null;
             if (cssClasses != null)
                 classesFragment = $"class=\"{cssClasses}\"";
-            var markup = $"<a {classesFragment} href=\"{PlayerModule.BasePath}/{player.SteamId}/{dateConstraint?.UrlFragment}\">{player.Name}</a>";
+            var markup = $"<a {classesFragment} href=\"{DateConstrainedLink($"{PlayerModule.BasePath}/{player.SteamId}", dateConstraint)}\">{player.Name}</a>";
             return new NonEncodedHtmlString(markup);
         }
 
@@ -22,7 +34,7 @@ namespace ItsGoStats.Helpers
             string classesFragment = null;
             if (cssClasses != null)
                 classesFragment = $"class=\"{cssClasses}\"";
-            var markup = $"<a {classesFragment} href=\"{GameModule.BasePath}/{game.Id}/{dateConstraint?.UrlFragment}\">{game.Map}</a>";
+            var markup = $"<a {classesFragment} href=\"{DateConstrainedLink($"{GameModule.BasePath}/{game.Id}", dateConstraint)}\">{game.Map}</a>";
             return new NonEncodedHtmlString(markup);
         }
     }
